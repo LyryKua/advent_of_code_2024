@@ -1,0 +1,26 @@
+{
+  "name": "advent_of_code_2024",
+  "version": "1.0.0",
+  "main": "index.cjs",
+  "repository": "git@github.com:LyryKua/advent_of_code_2024.git",
+  "author": "Kyrylo Hrecheniuk a.k.a Zhytomyr Wild",
+  "license": "MIT",
+  "keywords": [
+    "advent",
+    "of",
+    "code",
+    "2024"
+  ],
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "node index.cjs",
+    "d01": "node d01/index.js",
+    "d02": "node d02/index.js",
+    "d03": "node d03/index.js"
+  },
+  "type": "module",
+  "dependencies": {
+    "axios": "^1.6.2",
+    "dotenv": "^16.3.1"
+  }
+}
