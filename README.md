@@ -45,7 +45,7 @@
 ```bash
 git clone git@github.com:LyryKua/advent_of_code_2024.git
 cd advent_of_code_2024
-yarn
+npm i
 ```
 
 > [!NOTE]
@@ -55,17 +55,17 @@ yarn
 ### [--- Day 1: Historian Hysteria ---](https://adventofcode.com/2024/day/1)
 
 ```bash
-yarn d01
+npm run d01
 ```
 
 ### [--- Day 2: Red-Nosed Reports ---](https://adventofcode.com/2024/day/2)
 
 ```bash
-yarn d02
+npm run d02
 ```
 
 ### [--- Day 3: Mull It Over ---](https://adventofcode.com/2024/day/3)
 
 ```bash
-yarn d03
+npm run d03
 ```
