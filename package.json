@@ -16,7 +16,8 @@
     "start": "node index.cjs",
     "d01": "node d01/index.js",
     "d02": "node d02/index.js",
-    "d03": "node d03/index.js"
+    "d03": "node d03/index.js",
+    "d04": "node d04/index.js"
   },
   "type": "module",
   "dependencies": {
