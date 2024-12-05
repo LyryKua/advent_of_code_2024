@@ -19,7 +19,7 @@
 [![Day](https://badgen.net/badge/02/%E2%98%85%E2%98%85/green)](./d02)
 [![Day](https://badgen.net/badge/03/%E2%98%85%E2%98%85/green)](./d03)
 [![Day](https://badgen.net/badge/04/%E2%98%85%E2%98%85/green)](./d04)
-[![Day](https://badgen.net/badge/05/%E2%98%86%E2%98%86/gray)](./d05)
+[![Day](https://badgen.net/badge/05/%E2%98%85%E2%98%85/green)](./d05)
 [![Day](https://badgen.net/badge/06/%E2%98%86%E2%98%86/gray)](./d06)
 [![Day](https://badgen.net/badge/07/%E2%98%86%E2%98%86/gray)](./d07)
 [![Day](https://badgen.net/badge/08/%E2%98%86%E2%98%86/gray)](./d08)
@@ -70,9 +70,14 @@ npm run d02
 npm run d03
 ```
 
-### [--- Day 3: Ceres Search ---](https://adventofcode.com/2024/day/4)
+### [--- Day 4: Ceres Search ---](https://adventofcode.com/2024/day/4)
 
 ```bash
 npm run d04
 ```
 
+### [--- Day 5: Print Queue ---](https://adventofcode.com/2024/day/5)
+
+```bash
+npm run d05
+```

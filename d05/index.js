@@ -44,6 +44,42 @@ function part1(rules, updates) {
 }
 
 /**
+ * @param rules {[number, number][]}
+ * @param updates {number[][]}
+ * @returns {number}
+ */
+function part2(rules, updates) {
+  let nbr = 0
+  /**
+   * @type {Map<number, boolean>}
+   */
+  const map = new Map()
+  for (let i = 0; i < rules.length; i++) {
+    for (let j = 0; j < updates.length; j++) {
+      const lIndex = updates[j].findIndex(u => u === rules[i][0])
+      const rIndex = updates[j].findIndex(u => u === rules[i][1])
+      if (lIndex < 0 || rIndex < 0 || lIndex < rIndex) {
+        continue
+      }
+      map.set(j, true)
+    }
+  }
+  const invalidUpdates = updates.filter((_, index) => map.get(index)).map(u => u.sort((l, r) => {
+    for (let i = 0; i < rules.length; i++) {
+      if (l === rules[i][0] && r === rules[i][1]) {
+        return -1
+      }
+    }
+    return 1
+  }))
+
+  for (let i = 0; i < invalidUpdates.length; i++) {
+    nbr += invalidUpdates[i][Math.floor(invalidUpdates[i].length / 2)]
+  }
+  return nbr
+}
+
+/**
  * @param input {string}
  * @param part {number}
  * @returns {number}
@@ -55,45 +91,12 @@ function main(input, part) {
       return part1(rules, updates)
     }
     case 2: {
-      return input.length
+      return part2(rules, updates)
     }
   }
 
   return input.length + part
 }
-
-// const example = `
-// 47|53
-// 97|13
-// 97|61
-// 97|47
-// 75|29
-// 61|13
-// 75|53
-// 29|13
-// 97|29
-// 53|29
-// 61|53
-// 97|53
-// 61|29
-// 47|13
-// 75|47
-// 97|75
-// 47|61
-// 75|61
-// 47|29
-// 75|13
-// 53|13
-//
-// 75,47,61,53,29
-// 97,61,53,29,13
-// 75,29,13
-// 75,97,47,61,53
-// 61,13,29
-// 97,13,75,29,47
-// `
-// const examplePart = main(example, 1)
-// console.log(examplePart)
 
 console.log(NAME)
 getInput(DAY)
