@@ -1,7 +1,33 @@
-import { findChar, getInput, parseInput, parseInputToMap } from '../lib/index.js'
+import { findChar, getInput, isInside, parseInputToMap, printMap } from '../lib/index.js'
 
 const DAY = 6
 const NAME = `\n\n--- Day ${DAY}: Guard Gallivant ---`
+
+/**
+ * @param map {string[][]}
+ * @param x {number}
+ * @param y {number}
+ * @returns {number}
+ */
+function traverseMap(map, x, y) {
+  let dirX = 0
+  let dirY = -1
+  /** @type {Map<string, boolean>} */
+  const visitedCells = new Map()
+  while (isInside(map, x, y)) {
+    visitedCells.set([y, x].join(), true)
+    const newX = x + dirX
+    const newY = y + dirY
+    if (isInside(map, newX, newY) && map[newY][newX] === '#') {
+      const tmp = dirX
+      dirX = -dirY
+      dirY = tmp
+    }
+    x += dirX
+    y += dirY
+  }
+  return visitedCells.size
+}
 
 /**
  * @param map {string[][]}
@@ -10,7 +36,7 @@ const NAME = `\n\n--- Day ${DAY}: Guard Gallivant ---`
 function part1(map) {
   const start = findChar(map, '^')
 
-  return map.length
+  return traverseMap(map, start.x, start.y)
 }
 
 /**
@@ -31,6 +57,17 @@ function main(input, part) {
 }
 
 const example = `
+..#.....
+.......#
+........
+........
+..^...#.
+`
+
+const resultExample = main(example, 1)
+console.log(resultExample)
+
+const example1 = `
 ....#.....
 .........#
 ..........
@@ -43,10 +80,9 @@ const example = `
 ......#...
 `
 
-const resultExample = main(example, 1)
-console.log(resultExample)
+const resultExample1 = main(example1, 1)
+console.log(resultExample1)
 
-/*
 console.log(NAME)
 getInput(DAY)
   .then(input => {
@@ -56,6 +92,3 @@ getInput(DAY)
     const part2Result = main(input, 2)
     console.log('p2:', part2Result)
   })
-
-
- */
