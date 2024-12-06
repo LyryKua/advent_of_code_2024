@@ -81,3 +81,9 @@ npm run d04
 ```bash
 npm run d05
 ```
+
+### [--- Day 6: Guard Gallivant ---](https://adventofcode.com/2024/day/6)
+
+```bash
+npm run d06
+```
