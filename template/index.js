@@ -9,8 +9,14 @@ const NAME = `\n\n--- Day ${DAY}: TODO ---`
  * @returns {number}
  */
 function main(input, part) {
-
-  return input.length + part
+  switch (part) {
+    case 1:
+      return part
+    case 2:
+      return part
+    default:
+      throw new Error(`Only 2 parts. There is no part ${part}`)
+  }
 }
 
 console.log(NAME)
