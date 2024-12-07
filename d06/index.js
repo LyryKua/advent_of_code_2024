@@ -54,6 +54,40 @@ function traverseMap(map, x, y) {
  * @param map {string[][]}
  * @param x {number}
  * @param y {number}
+ * @returns {boolean}
+ */
+function doesItLoop(map, x, y) {
+  let dirX = 0;
+  let dirY = -1;
+  const obst = new Map();
+  while (isInside(map, x, y)) {
+    const newX = x + dirX;
+    const newY = y + dirY;
+    if (isInside(map, newX, newY) && map[newY][newX] === '#') {
+      const key = [newY, newX].join();
+      const val = obst.get(key);
+      obst.set(key, val ? val + 1 : 1);
+      if (val > 1) {
+        return true;
+      }
+      [dirX, dirY] = turn90DegreeRight(dirX, dirY);
+    }
+    x += dirX;
+    y += dirY;
+    if (isInside(map, x, y) && map[y][x] === '#') {
+      x -= dirX;
+      y -= dirY;
+      [dirX, dirY] = turn90DegreeRight(dirX, dirY);
+    }
+  }
+
+  return false;
+}
+
+/**
+ * @param map {string[][]}
+ * @param x {number}
+ * @param y {number}
  * @returns {[number,number][]}
  */
 function traverseMap2(map, x, y) {
@@ -73,15 +107,12 @@ function traverseMap2(map, x, y) {
     if (isInside(map, x, y) && map[y][x] === '#') {
       x -= dirX;
       y -= dirY;
-      const tmp = dirX;
-      dirX = -dirY;
-      dirY = tmp;
+      [dirX, dirY] = turn90DegreeRight(dirX, dirY);
     }
   }
 
   return visitedCells;
 }
-
 
 /**
  * @param map {string[][]}
@@ -100,9 +131,11 @@ function part1(map) {
  */
 function part2(map) {
   const start = findChar(map, '^');
-  const visitedCells = traverseMap(map, start.x, start.y);
+  // const visitedCells = traverseMap2(map, start.x, start.y);
+  const t = doesItLoop(map, start.x, start.y);
+  console.log('does it?', t);
 
-  return uniq(visitedCells).length;
+  // return uniq(visitedCells).length;
 }
 
 /**
@@ -124,15 +157,12 @@ function main(input, part) {
 
 const example = `
 .#..
-..#.
-....
-....
 #..#
 .^#.
 `;
 
 console.log(example);
-const resultExample = main(example, 1);
+const resultExample = main(example, 2);
 console.log(resultExample);
 //
 // const example1 = `
