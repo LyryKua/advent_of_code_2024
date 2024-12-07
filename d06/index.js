@@ -86,36 +86,6 @@ function doesItLoop(map, x, y) {
 
 /**
  * @param map {string[][]}
- * @param x {number}
- * @param y {number}
- * @returns {[number,number][]}
- */
-function traverseMap2(map, x, y) {
-  let dirX = 0;
-  let dirY = -1;
-  /** @type {[number, number][]} */
-  const visitedCells = [];
-  while (isInside(map, x, y)) {
-    visitedCells.push([y, x]);
-    const newX = x + dirX;
-    const newY = y + dirY;
-    if (isInside(map, newX, newY) && map[newY][newX] === '#') {
-      [dirX, dirY] = turn90DegreeRight(dirX, dirY);
-    }
-    x += dirX;
-    y += dirY;
-    if (isInside(map, x, y) && map[y][x] === '#') {
-      x -= dirX;
-      y -= dirY;
-      [dirX, dirY] = turn90DegreeRight(dirX, dirY);
-    }
-  }
-
-  return visitedCells;
-}
-
-/**
- * @param map {string[][]}
  * @returns {number}
  */
 function part1(map) {
@@ -130,12 +100,29 @@ function part1(map) {
  * @returns {number}
  */
 function part2(map) {
+  /** @type {Map<string, boolean>} */
+  const obst = new Map();
   const start = findChar(map, '^');
-  // const visitedCells = traverseMap2(map, start.x, start.y);
-  const t = doesItLoop(map, start.x, start.y);
-  console.log('does it?', t);
+  const visitedCells = traverseMap(map, start.x, start.y);
 
-  // return uniq(visitedCells).length;
+  for (let i = 0; i < visitedCells.length - 1; i++) {
+    let dirX = visitedCells[i + 1][1] - visitedCells[i][1];
+    let dirY = visitedCells[i + 1][0] - visitedCells[i][0];
+    if (
+      !isInside(map, visitedCells[i][1] + dirX, visitedCells[i][0] + dirY)
+      || (visitedCells[i][1] + dirX === start.x && visitedCells[i][0] + dirY === start.y)
+    ) {
+      continue;
+    }
+    const originChar = map[visitedCells[i][0] + dirY][visitedCells[i][1] + dirX];
+    map[visitedCells[i][0] + dirY][visitedCells[i][1] + dirX] = '#';
+    if (doesItLoop(map, start.x, start.y)) {
+      obst.set([visitedCells[i][0] + dirY, visitedCells[i][1] + dirX].join(), true);
+    }
+    map[visitedCells[i][0] + dirY][visitedCells[i][1] + dirX] = originChar;
+  }
+
+  return obst.size;
 }
 
 /**
@@ -155,30 +142,6 @@ function main(input, part) {
   }
 }
 
-const example = `
-.#..
-#..#
-.^#.
-`;
-
-console.log(example);
-const resultExample = main(example, 2);
-console.log(resultExample);
-//
-// const example1 = `
-// #..
-// .#.
-// ...
-// ^..
-// ...
-// `
-//
-// console.log(example1)
-// const resultExample1 = main(example1, 2)
-// console.log(resultExample1)
-//
-
-/*
 console.log(NAME)
 getInput(DAY)
   .then(input => {
@@ -188,4 +151,3 @@ getInput(DAY)
     const part2Result = main(input, 2)
     console.log('p2:', part2Result)
   })
-*/
