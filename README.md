@@ -87,3 +87,9 @@ npm run d05
 ```bash
 npm run d06
 ```
+
+### [--- Day 7: Bridge Repair ---](https://adventofcode.com/2024/day/7)
+
+```bash
+npm run d07
+```
