@@ -47,22 +47,55 @@ function getPairs(coordinates) {
  */
 function part1(map) {
   /** @type {Map<string, boolean>} */
-  const antiAntennasMap = new Map()
+  const antiAntennasMap = new Map();
   const antennasMap = getAllAntennas(map);
-  for (let [antenna, coordinates] of antennasMap) {
-    const pairs = getPairs(coordinates)
+  for (let [_, coordinates] of antennasMap) {
+    const pairs = getPairs(coordinates);
     for (const pair of pairs) {
-      const antenna1 = pair[0]
-      const antenna2 = pair[1]
-      const deltaX = antenna2[1] - antenna1[1]
-      const deltaY = antenna2[0] - antenna1[0]
-      const antiAntenna1 = addVectors(antenna1, [-deltaY, -deltaX])
-      const antiAntenna2 = addVectors(antenna2, [deltaY, deltaX])
+      const antenna1 = pair[0];
+      const antenna2 = pair[1];
+      const deltaX = antenna2[1] - antenna1[1];
+      const deltaY = antenna2[0] - antenna1[0];
+      const antiAntenna1 = addVectors(antenna1, [-deltaY, -deltaX]);
+      const antiAntenna2 = addVectors(antenna2, [deltaY, deltaX]);
       if (isInside(map, antiAntenna1[1], antiAntenna1[0])) {
-        antiAntennasMap.set(antiAntenna1.join(), true)
+        antiAntennasMap.set(antiAntenna1.join(), true);
       }
       if (isInside(map, antiAntenna2[1], antiAntenna2[0])) {
-        antiAntennasMap.set(antiAntenna2.join(), true)
+        antiAntennasMap.set(antiAntenna2.join(), true);
+      }
+    }
+  }
+
+  return antiAntennasMap.size;
+}
+
+/**
+ * @param map {string[][]}
+ * @returns {number}
+ */
+function part2(map) {
+  const antennasMap = getAllAntennas(map);
+  /** @type {Map<string, boolean>} */
+  const antiAntennasMap = new Map();
+  for (let [_, coordinates] of antennasMap) {
+    const pairs = getPairs(coordinates);
+    for (const pair of pairs) {
+      const antenna1 = pair[0];
+      const antenna2 = pair[1];
+      antiAntennasMap.set(antenna1.join(), true);
+      antiAntennasMap.set(antenna2.join(), true);
+      const deltaX = antenna2[1] - antenna1[1];
+      const deltaY = antenna2[0] - antenna1[0];
+      let antiAntenna1 = addVectors(antenna1, [-deltaY, -deltaX]);
+      while (isInside(map, antiAntenna1[1], antiAntenna1[0])) {
+        antiAntennasMap.set(antiAntenna1.join(), true);
+        antiAntenna1 = addVectors(antiAntenna1, [-deltaY, -deltaX]);
+      }
+      let antiAntenna2 = addVectors(antenna2, [deltaY, deltaX]);
+      while (isInside(map, antiAntenna2[1], antiAntenna2[0])) {
+        antiAntennasMap.set(antiAntenna2.join(), true);
+        antiAntenna2 = addVectors(antiAntenna2, [deltaY, deltaX]);
       }
     }
   }
@@ -82,29 +115,11 @@ function main(input, part) {
     case 1:
       return part1(map);
     case 2:
-      return part;
+      return part2(map);
     default:
       throw new Error(`Only 2 parts. There is no part ${part}`);
   }
 }
-
-// const example = `
-// ............
-// ........0...
-// .....0......
-// .......0....
-// ....0.......
-// ......A.....
-// ............
-// ............
-// ........A...
-// .........A..
-// ............
-// ............
-// `;
-// const resultExample = main(example, 1);
-// console.log(resultExample);
-
 
 console.log(NAME);
 getInput(DAY)
