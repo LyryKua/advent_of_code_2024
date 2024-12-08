@@ -93,3 +93,9 @@ npm run d06
 ```bash
 npm run d07
 ```
+
+### [--- Day 8: Resonant Collinearity ---](https://adventofcode.com/2024/day/8)
+
+```bash
+npm run d08
+```
