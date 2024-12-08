@@ -21,6 +21,29 @@ function setOperators(left, right) {
 }
 
 /**
+ * @param left {number|string[]}
+ * @param right {number[]}
+ */
+function setOperators2(left, right) {
+  if (right.length === 1) {
+    return [
+      [...left, right[0]],
+    ];
+  }
+  const [firstRight, ...restRight] = right;
+  const newLeftWithPlus = [...left, firstRight, '+'];
+  const newLeftWithMult = [...left, firstRight, '*'];
+  const newLeftWithConc = [...left, firstRight, '|'];
+
+  return [
+    ...setOperators2(newLeftWithMult, restRight),
+    ...setOperators2(newLeftWithPlus, restRight),
+    ...setOperators2(newLeftWithConc, restRight)
+  ];
+}
+
+
+/**
  * @param arr {[number, number[]]}
  * @returns {number}
  */
@@ -34,8 +57,37 @@ function part1(arr) {
       for (let j = 2; j < withOperators[k].length; j += 2) {
         if (withOperators[k][j - 1] === '*') {
           result *= withOperators[k][j];
-        } else {
+        } else if (withOperators[k][j - 1] === '+') {
           result += withOperators[k][j];
+        }
+      }
+      if (result === calibrationResult) {
+        nbr += calibrationResult;
+        break;
+      }
+    }
+  }
+  return nbr;
+}
+
+/**
+ * @param arr {[number, number[]]}
+ * @returns {number}
+ */
+function part2(arr) {
+  let nbr = 0;
+  for (let i = 0; i < arr.length; i++) {
+    const [calibrationResult, operands] = arr[i];
+    const withOperators = setOperators2([], operands);
+    for (let k = 0; k < withOperators.length; k++) {
+      let result = withOperators[k][0];
+      for (let j = 2; j < withOperators[k].length; j += 2) {
+        if (withOperators[k][j - 1] === '*') {
+          result *= withOperators[k][j];
+        } else if (withOperators[k][j - 1] === '+') {
+          result += withOperators[k][j];
+        } else if (withOperators[k][j - 1] === '|') {
+          result = parseInt(result.toString() + withOperators[k][j].toString())
         }
       }
       if (result === calibrationResult) {
@@ -61,33 +113,18 @@ function main(input, part) {
     case 1:
       return part1(arr);
     case 2:
-      return part;
+      return part2(arr);
     default:
       throw new Error(`Only 2 parts. There is no part ${part}`);
   }
 }
 
-// const example = `
-// 190: 10 19
-// 3267: 81 40 27
-// 83: 17 5
-// 156: 15 6
-// 7290: 6 8 6 15
-// 161011: 16 10 13
-// 192: 17 8 14
-// 21037: 9 7 18 13
-// 292: 11 6 16 20
-// `;
-// const resultExample = main(example, 1);
-// console.log(resultExample);
-
-
-console.log(NAME)
+console.log(NAME);
 getInput(DAY)
   .then(input => {
-    const part1Result = main(input, 1)
-    console.log('p1:', part1Result)
+    const part1Result = main(input, 1);
+    console.log('p1:', part1Result);
 
-    const part2Result = main(input, 2)
-    console.log('p2:', part2Result)
-  })
+    const part2Result = main(input, 2);
+    console.log('p2:', part2Result);
+  });
