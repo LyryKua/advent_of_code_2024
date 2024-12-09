@@ -99,3 +99,9 @@ npm run d07
 ```bash
 npm run d08
 ```
+
+### [--- Day 9: Disk Fragmenter ---](https://adventofcode.com/2024/day/9)
+
+```bash
+npm run d09
+```
