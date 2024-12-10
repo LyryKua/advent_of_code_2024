@@ -105,3 +105,9 @@ npm run d08
 ```bash
 npm run d09
 ```
+
+### [--- Day 10: Hoof It ---](https://adventofcode.com/2024/day/10)
+
+```bash
+npm run d09
+```
