@@ -31,19 +31,19 @@ function traverseMap(map, x, y) {
   let dirY = -1;
   /** @type {[number, number][]} */
   const visitedCells = [];
-  while (isInside(map, x, y)) {
+  while (isInside(map, [y, x])) {
     visitedCells.push([y, x]);
     const newX = x + dirX;
     const newY = y + dirY;
-    if (isInside(map, newX, newY) && map[newY][newX] === '#') {
-      [dirX, dirY] = turn90DegreeRight(dirX, dirY);
+    if (isInside(map, [newY, newX]) && map[newY][newX] === '#') {
+      [dirY, dirX] = turn90DegreeRight([dirY, dirX]);
     }
     x += dirX;
     y += dirY;
-    if (isInside(map, x, y) && map[y][x] === '#') {
+    if (isInside(map, [y, x]) && map[y][x] === '#') {
       x -= dirX;
       y -= dirY;
-      [dirX, dirY] = turn90DegreeRight(dirX, dirY);
+      [dirY, dirX] = turn90DegreeRight([dirY, dirX]);
     }
   }
 
@@ -60,24 +60,24 @@ function doesItLoop(map, x, y) {
   let dirX = 0;
   let dirY = -1;
   const obst = new Map();
-  while (isInside(map, x, y)) {
+  while (isInside(map, [y, x])) {
     const newX = x + dirX;
     const newY = y + dirY;
-    if (isInside(map, newX, newY) && map[newY][newX] === '#') {
+    if (isInside(map, [newY, newX]) && map[newY][newX] === '#') {
       const key = [newY, newX].join();
       const val = obst.get(key);
       obst.set(key, val ? val + 1 : 1);
       if (val > 1) {
         return true;
       }
-      [dirX, dirY] = turn90DegreeRight(dirX, dirY);
+      [dirY, dirX] = turn90DegreeRight([dirY, dirX]);
     }
     x += dirX;
     y += dirY;
-    if (isInside(map, x, y) && map[y][x] === '#') {
+    if (isInside(map, [y, x]) && map[y][x] === '#') {
       x -= dirX;
       y -= dirY;
-      [dirX, dirY] = turn90DegreeRight(dirX, dirY);
+      [dirY, dirX] = turn90DegreeRight([dirY, dirX]);
     }
   }
 
@@ -89,8 +89,8 @@ function doesItLoop(map, x, y) {
  * @returns {number}
  */
 function part1(map) {
-  const start = findChar(map, '^');
-  const visitedCells = traverseMap(map, start.x, start.y);
+  const [start] = findChar(map, '^');
+  const visitedCells = traverseMap(map, start[1], start[0]);
 
   return uniq(visitedCells).length;
 }
@@ -102,21 +102,21 @@ function part1(map) {
 function part2(map) {
   /** @type {Map<string, boolean>} */
   const obst = new Map();
-  const start = findChar(map, '^');
-  const visitedCells = traverseMap(map, start.x, start.y);
+  const [start] = findChar(map, '^');
+  const visitedCells = traverseMap(map, start[1], start[0]);
 
   for (let i = 0; i < visitedCells.length - 1; i++) {
     let dirX = visitedCells[i + 1][1] - visitedCells[i][1];
     let dirY = visitedCells[i + 1][0] - visitedCells[i][0];
     if (
-      !isInside(map, visitedCells[i][1] + dirX, visitedCells[i][0] + dirY)
-      || (visitedCells[i][1] + dirX === start.x && visitedCells[i][0] + dirY === start.y)
+      !isInside(map, [visitedCells[i][0] + dirY, visitedCells[i][1] + dirX])
+      || (visitedCells[i][1] + dirX === start[1] && visitedCells[i][0] + dirY === start[0])
     ) {
       continue;
     }
     const originChar = map[visitedCells[i][0] + dirY][visitedCells[i][1] + dirX];
     map[visitedCells[i][0] + dirY][visitedCells[i][1] + dirX] = '#';
-    if (doesItLoop(map, start.x, start.y)) {
+    if (doesItLoop(map, start[1], start[0])) {
       obst.set([visitedCells[i][0] + dirY, visitedCells[i][1] + dirX].join(), true);
     }
     map[visitedCells[i][0] + dirY][visitedCells[i][1] + dirX] = originChar;

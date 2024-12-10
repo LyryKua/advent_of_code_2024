@@ -58,10 +58,10 @@ function part1(map) {
       const deltaY = antenna2[0] - antenna1[0];
       const antiAntenna1 = addVectors(antenna1, [-deltaY, -deltaX]);
       const antiAntenna2 = addVectors(antenna2, [deltaY, deltaX]);
-      if (isInside(map, antiAntenna1[1], antiAntenna1[0])) {
+      if (isInside(map, antiAntenna1)) {
         antiAntennasMap.set(antiAntenna1.join(), true);
       }
-      if (isInside(map, antiAntenna2[1], antiAntenna2[0])) {
+      if (isInside(map, antiAntenna2)) {
         antiAntennasMap.set(antiAntenna2.join(), true);
       }
     }
@@ -88,12 +88,12 @@ function part2(map) {
       const deltaX = antenna2[1] - antenna1[1];
       const deltaY = antenna2[0] - antenna1[0];
       let antiAntenna1 = addVectors(antenna1, [-deltaY, -deltaX]);
-      while (isInside(map, antiAntenna1[1], antiAntenna1[0])) {
+      while (isInside(map, antiAntenna1)) {
         antiAntennasMap.set(antiAntenna1.join(), true);
         antiAntenna1 = addVectors(antiAntenna1, [-deltaY, -deltaX]);
       }
       let antiAntenna2 = addVectors(antenna2, [deltaY, deltaX]);
-      while (isInside(map, antiAntenna2[1], antiAntenna2[0])) {
+      while (isInside(map, antiAntenna2)) {
         antiAntennasMap.set(antiAntenna2.join(), true);
         antiAntenna2 = addVectors(antiAntenna2, [deltaY, deltaX]);
       }
