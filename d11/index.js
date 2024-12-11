@@ -2,7 +2,6 @@ import { getInput, parseInput } from '../lib/index.js';
 
 const DAY = 11;
 const NAME = `\n\n--- Day ${DAY}: Plutonian Pebbles ---`;
-const ITERATIONS = 25;
 
 /**
  * @param nbr {number}
@@ -28,7 +27,7 @@ function splitNbr(nbr) {
  */
 function calculateLenAfterIterations(stones, iterations) {
   let newStones = [stones]
-  for (let i = 0; i < ITERATIONS; i++) {
+  for (let i = 0; i < iterations; i++) {
     newStones.push([])
     for (let j = 0; j < newStones[i].length; j++) {
       if (newStones[i][j] === 0) {
@@ -41,17 +40,18 @@ function calculateLenAfterIterations(stones, iterations) {
     }
   }
 
-  return newStones[ITERATIONS].length;
+  return newStones[iterations].length;
 }
 
 /**
  * @param stones {number[]}
+ * @param iterations {number}
  * @returns {number}
  */
-function part1(stones) {
+function part(stones, iterations) {
   let nbr = 0
   for (let i = 0; i < stones.length; i++) {
-    nbr += calculateLenAfterIterations([stones[i]], ITERATIONS)
+    nbr += calculateLenAfterIterations([stones[i]], iterations)
   }
 
   return nbr;
@@ -59,30 +59,23 @@ function part1(stones) {
 
 /**
  * @param input {string}
- * @param part {number}
+ * @param n {number}
  * @returns {number}
  */
-function main(input, part) {
+function main(input, n) {
   const arr = input.trim().split(' ').map(it => parseInt(it));
-
-  switch (part) {
-    case 1:
-      return part1(arr);
-    case 2:
-      return part;
-    default:
-      throw new Error(`Only 2 parts. There is no part ${part}`);
-  }
+  return part(arr, n === 1 ? 25 : 75)
 }
 
-// let example = '0'
+let example = '0'
 // let example = '125 17';
 // let example = '253000 1 7'
 // let example = '512 72 2024 2 0 2 4 2867 6032'
 // let example = '4 0 4 8 20 24 4 0 4 8 8 0 9 6'
-// let result = main(example, 1);
-// console.log(result);
+let result = main(example, 1);
+console.log(result);
 
+/*
 console.log(NAME)
 getInput(DAY)
   .then(input => {
@@ -92,3 +85,4 @@ getInput(DAY)
     const part2Result = main(input, 2)
     console.log('p2:', part2Result)
   })
+*/
