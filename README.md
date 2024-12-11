@@ -25,7 +25,7 @@
 [![Day](https://badgen.net/badge/08/%E2%98%85%E2%98%85/green)](./d08)
 [![Day](https://badgen.net/badge/09/%E2%98%85%E2%98%85/green)](./d09)
 [![Day](https://badgen.net/badge/10/%E2%98%85%E2%98%85/green)](./d10)
-[![Day](https://badgen.net/badge/11/%E2%98%86%E2%98%86/gray)](./d11)
+[![Day](https://badgen.net/badge/11/%E2%98%85%E2%98%86/yellow)](./d11)
 [![Day](https://badgen.net/badge/12/%E2%98%86%E2%98%86/gray)](./d12)
 [![Day](https://badgen.net/badge/13/%E2%98%86%E2%98%86/gray)](./d13)
 [![Day](https://badgen.net/badge/14/%E2%98%86%E2%98%86/gray)](./d14)
@@ -109,5 +109,11 @@ npm run d09
 ### [--- Day 10: Hoof It ---](https://adventofcode.com/2024/day/10)
 
 ```bash
-npm run d09
+npm run d10
+```
+
+### [--- Day 11: Plutonian Pebbles ---](https://adventofcode.com/2024/day/11)
+
+```bash
+npm run d10
 ```
