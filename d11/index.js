@@ -44,10 +44,19 @@ function calcLen(stones, iterations, map) {
   if (iterations === 0) {
     return stones.length;
   }
+
   let calculatedLen = 0;
   for (let i = 0; i < stones.length; i++) {
     let newStones = blink(stones[i]);
-    calculatedLen += calcLen(newStones, iterations - 1, map);
+    let key = `${stones[i]}:${iterations}`;
+    let savedLen = map.get(key);
+    if (savedLen === undefined) {
+      let tmp = calcLen(newStones, iterations - 1, map);
+      calculatedLen += tmp;
+      map.set(key, tmp);
+    } else {
+      calculatedLen += savedLen;
+    }
   }
 
   return calculatedLen;
@@ -79,20 +88,12 @@ function main(input, n) {
   return part(arr, n === 1 ? 25 : 75);
 }
 
-let example = '0';
-// let example = '125 17';
-// let example = '253000 1 7'
-// let example = '512 72 2024 2 0 2 4 2867 6032'
-// let example = '4 0 4 8 20 24 4 0 4 8 8 0 9 6'
-let result = main(example, 1);
-console.log(result);
+console.log(NAME);
+getInput(DAY)
+  .then(input => {
+    const part1Result = main(input, 1);
+    console.log('p1:', part1Result);
 
-// console.log(NAME);
-// getInput(DAY)
-//   .then(input => {
-//     const part1Result = main(input, 1);
-//     console.log('p1:', part1Result);
-//
-//     const part2Result = main(input, 2);
-//     console.log('p2:', part2Result);
-//   });
+    const part2Result = main(input, 2);
+    console.log('p2:', part2Result);
+  });
