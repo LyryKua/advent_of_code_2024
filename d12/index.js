@@ -17,7 +17,7 @@ const NAME = `\n\n--- Day ${DAY}: Garden Groups ---`;
  * @param start {number[]}
  * @param originPosition {number[]}
  * @param unvisited {Set<string>}
- * @param hash {Map<string, {coordinates: number[][], area: number, perimeter: number}>}
+ * @param hash {Map<string, {coordinates: number[][], area: number, extremePoints: number[][]}>}
  */
 function traceMap(map, start, originPosition, unvisited, hash) {
   let origin = map[originPosition[0]][originPosition[1]];
@@ -29,8 +29,8 @@ function traceMap(map, start, originPosition, unvisited, hash) {
     visited.coordinates.push(left);
     visited.area += 1;
     traceMap(map, left, originPosition, unvisited, hash);
-  } else {
-    visited.perimeter += isArrayInclude(visited.coordinates, left) ? 0 : 1;
+  } else if (!isArrayInclude(visited.coordinates, left)) {
+    visited.extremePoints.push(left);
   }
 
   let right = addVectors(start, [0, 1]);
@@ -39,8 +39,8 @@ function traceMap(map, start, originPosition, unvisited, hash) {
     visited.coordinates.push(right);
     visited.area += 1;
     traceMap(map, right, originPosition, unvisited, hash);
-  } else {
-    visited.perimeter += isArrayInclude(visited.coordinates, right) ? 0 : 1;
+  } else if (!isArrayInclude(visited.coordinates, right)) {
+    visited.extremePoints.push(right);
   }
 
   let top = addVectors(start, [-1, 0]);
@@ -49,8 +49,8 @@ function traceMap(map, start, originPosition, unvisited, hash) {
     visited.coordinates.push(top);
     visited.area += 1;
     traceMap(map, top, originPosition, unvisited, hash);
-  } else {
-    visited.perimeter += isArrayInclude(visited.coordinates, top) ? 0 : 1;
+  } else if (!isArrayInclude(visited.coordinates, top)) {
+    visited.extremePoints.push(top);
   }
 
   let bottom = addVectors(start, [1, 0]);
@@ -59,8 +59,8 @@ function traceMap(map, start, originPosition, unvisited, hash) {
     visited.coordinates.push(bottom);
     visited.area += 1;
     traceMap(map, bottom, originPosition, unvisited, hash);
-  } else {
-    visited.perimeter += isArrayInclude(visited.coordinates, bottom) ? 0 : 1;
+  } else if (!isArrayInclude(visited.coordinates, bottom)) {
+    visited.extremePoints.push(bottom);
   }
 }
 
@@ -70,19 +70,19 @@ function traceMap(map, start, originPosition, unvisited, hash) {
  */
 function part1(map) {
   let unvisited = getAllPossibleCoordinates(map);
-  /** @type {Map<string, {coordinates: number[][], area: number, perimeter: number}>} */
+  /** @type {Map<string, {coordinates: number[][], area: number, extremePoints: number[][]}>} */
   let visited = new Map();
   while (unvisited.size) {
     let start = unvisited.values().next().value.split(',').map(Number);
     unvisited.delete(start.join());
     let origin = [...start];
-    visited.set(start.join(), { coordinates: [start], area: 1, perimeter: 0 });
+    visited.set(start.join(), { coordinates: [start], area: 1, extremePoints: [] });
     traceMap(map, start, origin, unvisited, visited);
   }
 
-  let price = 0
+  let price = 0;
   for (let it of visited.values()) {
-    price += it.area * it.perimeter
+    price += it.area * it.extremePoints.length;
   }
 
   return price;
@@ -134,12 +134,12 @@ function main(input, part) {
 // let result = main(example, 1);
 // console.log('result:', result);
 
-console.log(NAME)
+console.log(NAME);
 getInput(DAY)
   .then(input => {
-    const part1Result = main(input, 1)
-    console.log('p1:', part1Result)
+    const part1Result = main(input, 1);
+    console.log('p1:', part1Result);
 
-    const part2Result = main(input, 2)
-    console.log('p2:', part2Result)
-  })
+    const part2Result = main(input, 2);
+    console.log('p2:', part2Result);
+  });
