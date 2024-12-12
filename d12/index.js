@@ -65,10 +65,19 @@ function traceMap(map, start, originPosition, unvisited, hash) {
 }
 
 /**
+ * @param arr {number[][]}
+ * @return {number[][]}
+ */
+function countVertexes(arr) {
+  return arr;
+}
+
+/**
  * @param map {string[][]}
+ * @param part {number}
  * @returns {number}
  */
-function part1(map) {
+function solve(map, part) {
   let unvisited = getAllPossibleCoordinates(map);
   /** @type {Map<string, {coordinates: number[][], area: number, extremePoints: number[][]}>} */
   let visited = new Map();
@@ -82,7 +91,8 @@ function part1(map) {
 
   let price = 0;
   for (let it of visited.values()) {
-    price += it.area * it.extremePoints.length;
+    let perimeter = part === 1 ? it.extremePoints.length : countVertexes(it.extremePoints).length;
+    price += it.area * perimeter;
   }
 
   return price;
@@ -96,14 +106,7 @@ function part1(map) {
 function main(input, part) {
   let map = parseInputToMap(input);
 
-  switch (part) {
-    case 1:
-      return part1(map);
-    case 2:
-      return part;
-    default:
-      throw new Error(`Only 2 parts. There is no part ${part}`);
-  }
+  return solve(map, part);
 }
 
 // let example = `
