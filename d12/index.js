@@ -70,17 +70,22 @@ function traceMap(map, start, originPosition, unvisited, hash) {
  */
 function part1(map) {
   let unvisited = getAllPossibleCoordinates(map);
+  /** @type {Map<string, {coordinates: number[][], area: number, perimeter: number}>} */
   let visited = new Map();
   while (unvisited.size) {
     let start = unvisited.values().next().value.split(',').map(Number);
     unvisited.delete(start.join());
     let origin = [...start];
-    /** @type {Map<string, {coordinates: number[][], area: number, perimeter: number}>} */
     visited.set(start.join(), { coordinates: [start], area: 1, perimeter: 0 });
     traceMap(map, start, origin, unvisited, visited);
   }
 
-  return map.length;
+  let price = 0
+  for (let it of visited.values()) {
+    price += it.area * it.perimeter
+  }
+
+  return price;
 }
 
 /**
@@ -101,21 +106,40 @@ function main(input, part) {
   }
 }
 
-let example = `
-AAAA
-BBCD
-BBCC
-EEEC
-`;
-let result = main(example, 1);
-console.log('result:', result);
+// let example = `
+// AAAA
+// BBCD
+// BBCC
+// EEEC
+// `;
+// let example = `
+// RRRRIICCFF
+// RRRRIICCCF
+// VVRRRCCFFF
+// VVRCCCJFFF
+// VVVVCJJCFE
+// VVIVCCJJEE
+// VVIIICJJEE
+// MIIIIIJJEE
+// MIIISIJEEE
+// MMMISSJEEE
+// `;
+// let example = `
+// OOOOO
+// OXOXO
+// OOOOO
+// OXOXO
+// OOOOO
+// `;
+// let result = main(example, 1);
+// console.log('result:', result);
 
-// console.log(NAME)
-// getInput(DAY)
-//   .then(input => {
-//     const part1Result = main(input, 1)
-//     console.log('p1:', part1Result)
-//
-//     const part2Result = main(input, 2)
-//     console.log('p2:', part2Result)
-//   })
+console.log(NAME)
+getInput(DAY)
+  .then(input => {
+    const part1Result = main(input, 1)
+    console.log('p1:', part1Result)
+
+    const part2Result = main(input, 2)
+    console.log('p2:', part2Result)
+  })
