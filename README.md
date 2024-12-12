@@ -117,3 +117,9 @@ npm run d10
 ```bash
 npm run d11
 ```
+
+### [--- Day 12: Garden Groups ---](https://adventofcode.com/2024/day/12)
+
+```bash
+npm run d12
+```
