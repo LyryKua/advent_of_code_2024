@@ -66,11 +66,13 @@ function traceMap(map, start, originPosition, unvisited, hash) {
 
 /**
  * @param arr {number[][]}
- * @return {number[][]}
+ * @return {number}
  */
 function countVertices(arr) {
-  /** @type {number[][]} */
-  let vertices = [];
+  /** @type {Map<string, boolean>} */
+  let map = new Map()
+  let extra = 0
+
   for (let i = 0; i < arr.length; i++) {
     let left = addVectors(arr[i], [0, -1]);
     let right = addVectors(arr[i], [0, 1]);
@@ -81,54 +83,139 @@ function countVertices(arr) {
     let leftTop = addVectors(arr[i], [-1, -1]);
     let leftBottom = addVectors(arr[i], [1, -1]);
 
-    if (isArrayInclude(arr, left) && isArrayInclude(arr, top) && isArrayInclude(arr, right) && !isArrayInclude(arr, leftTop) && !isArrayInclude(arr, rightTop) && !isArrayInclude(arr, leftBottom) && !isArrayInclude(arr, bottom) && !isArrayInclude(arr, rightBottom)) {
-      vertices.push(arr[i]);
-    } else if (isArrayInclude(arr, top) && isArrayInclude(arr, right) && isArrayInclude(arr, bottom) && !isArrayInclude(arr, leftTop) && !isArrayInclude(arr, rightTop) && !isArrayInclude(arr, rightBottom) && !isArrayInclude(arr, leftBottom) && !isArrayInclude(arr, left)) {
-      vertices.push(arr[i]);
-    } else if (isArrayInclude(arr, right) && isArrayInclude(arr, bottom) && isArrayInclude(arr, left) && !isArrayInclude(arr, leftTop) && !isArrayInclude(arr, top) && !isArrayInclude(arr, rightTop) && !isArrayInclude(arr, rightBottom) && !isArrayInclude(arr, leftBottom)) {
-      vertices.push(arr[i]);
-    } else if (isArrayInclude(arr, bottom) && isArrayInclude(arr, left) && isArrayInclude(arr, top) && !isArrayInclude(arr, leftTop) && !isArrayInclude(arr, rightTop) && !isArrayInclude(arr, right) && !isArrayInclude(arr, rightBottom) && !isArrayInclude(arr, leftBottom)) {
-      vertices.push(arr[i]);
-    } else if (isArrayInclude(arr, right) && isArrayInclude(arr, bottom) && !isArrayInclude(arr, rightBottom) && !isArrayInclude(arr, leftBottom) && !isArrayInclude(arr, left) && !isArrayInclude(arr, leftTop) && !isArrayInclude(arr, top) && !isArrayInclude(arr, rightTop)) {
-      vertices.push(arr[i]);
-    } else if (isArrayInclude(arr, rightTop) && isArrayInclude(arr, bottom) && !isArrayInclude(arr, right) && !isArrayInclude(arr, rightBottom) && !isArrayInclude(arr, leftBottom) && !isArrayInclude(arr, left) && !isArrayInclude(arr, leftTop) && !isArrayInclude(arr, top)) {
-      vertices.push(arr[i]);
-    } else if (isArrayInclude(arr, leftTop) && isArrayInclude(arr, bottom) && !isArrayInclude(arr, left) && !isArrayInclude(arr, leftBottom) && !isArrayInclude(arr, rightBottom) && !isArrayInclude(arr, right) && !isArrayInclude(arr, rightTop) && !isArrayInclude(arr, top)) {
-      vertices.push(arr[i]);
-    } else if (isArrayInclude(arr, left) && isArrayInclude(arr, bottom) && !isArrayInclude(arr, leftTop) && !isArrayInclude(arr, top) && !isArrayInclude(arr, rightTop) && !isArrayInclude(arr, right) && !isArrayInclude(arr, rightBottom) && !isArrayInclude(arr, leftBottom)) {
-      vertices.push(arr[i]);
-    } else if (isArrayInclude(arr, top) && isArrayInclude(arr, left) && !isArrayInclude(arr, leftTop) && !isArrayInclude(arr, rightTop) && !isArrayInclude(arr, right) && !isArrayInclude(arr, rightBottom) && !isArrayInclude(arr, bottom) && !isArrayInclude(arr, leftBottom)) {
-      vertices.push(arr[i]);
-    } else if (isArrayInclude(arr, top) && isArrayInclude(arr, leftBottom) && !isArrayInclude(arr, leftTop) && !isArrayInclude(arr, rightTop) && !isArrayInclude(arr, right) && !isArrayInclude(arr, rightBottom) && !isArrayInclude(arr, bottom) && !isArrayInclude(arr, left)) {
-      vertices.push(arr[i]);
-    } else if (isArrayInclude(arr, top) && isArrayInclude(arr, rightBottom) && !isArrayInclude(arr, leftTop) && !isArrayInclude(arr, rightTop) && !isArrayInclude(arr, right) && !isArrayInclude(arr, bottom) && !isArrayInclude(arr, leftBottom) && !isArrayInclude(arr, left)) {
-      vertices.push(arr[i]);
-    } else if (isArrayInclude(arr, top) && isArrayInclude(arr, right) && !isArrayInclude(arr, leftTop) && !isArrayInclude(arr, rightTop) && !isArrayInclude(arr, rightBottom) && !isArrayInclude(arr, bottom) && !isArrayInclude(arr, leftBottom) && !isArrayInclude(arr, left)) {
-      vertices.push(arr[i]);
-    } else if (isArrayInclude(arr, left) && isArrayInclude(arr, rightBottom) && !isArrayInclude(arr, leftTop) && !isArrayInclude(arr, top) && !isArrayInclude(arr, rightTop) && !isArrayInclude(arr, right) && !isArrayInclude(arr, bottom) && !isArrayInclude(arr, leftBottom)) {
-      vertices.push(arr[i]);
-    } else if (isArrayInclude(arr, left) && isArrayInclude(arr, rightTop) && !isArrayInclude(arr, leftTop) && !isArrayInclude(arr, top) && !isArrayInclude(arr, right) && !isArrayInclude(arr, rightBottom) && !isArrayInclude(arr, bottom) && !isArrayInclude(arr, leftBottom)) {
-      vertices.push(arr[i]);
-    } else if (isArrayInclude(arr, left) && isArrayInclude(arr, top) && !isArrayInclude(arr, leftTop) && !isArrayInclude(arr, rightTop) && !isArrayInclude(arr, right) && !isArrayInclude(arr, rightBottom) && !isArrayInclude(arr, bottom) && !isArrayInclude(arr, leftBottom)) {
-      vertices.push(arr[i]);
-    } else if (isArrayInclude(arr, leftTop) && isArrayInclude(arr, right) && !isArrayInclude(arr, top) && !isArrayInclude(arr, rightTop) && !isArrayInclude(arr, rightBottom) && !isArrayInclude(arr, bottom) && !isArrayInclude(arr, leftBottom) && !isArrayInclude(arr, left)) {
-      vertices.push(arr[i]);
-    } else if (isArrayInclude(arr, leftBottom) && isArrayInclude(arr, right) && !isArrayInclude(arr, leftTop) && !isArrayInclude(arr, top) && !isArrayInclude(arr, rightTop) && !isArrayInclude(arr, rightBottom) && !isArrayInclude(arr, bottom) && !isArrayInclude(arr, left)) {
-      vertices.push(arr[i]);
-    } else if (isArrayInclude(arr, bottom) && isArrayInclude(arr, right) && !isArrayInclude(arr, leftTop) && !isArrayInclude(arr, top) && !isArrayInclude(arr, rightTop) && !isArrayInclude(arr, rightBottom) && !isArrayInclude(arr, leftBottom) && !isArrayInclude(arr, left)) {
-      vertices.push(arr[i]);
-    } else if (isArrayInclude(arr, leftTop) && isArrayInclude(arr, rightTop) && !isArrayInclude(arr, top) && !isArrayInclude(arr, right) && !isArrayInclude(arr, rightBottom) && !isArrayInclude(arr, bottom) && !isArrayInclude(arr, leftBottom) && !isArrayInclude(arr, left)) {
-      vertices.push(arr[i]);
-    } else if (isArrayInclude(arr, rightTop) && isArrayInclude(arr, rightBottom) && !isArrayInclude(arr, leftTop) && !isArrayInclude(arr, top) && !isArrayInclude(arr, right) && !isArrayInclude(arr, bottom) && !isArrayInclude(arr, leftBottom) && !isArrayInclude(arr, left)) {
-      vertices.push(arr[i]);
-    } else if (isArrayInclude(arr, rightBottom) && isArrayInclude(arr, leftBottom) && !isArrayInclude(arr, leftTop) && !isArrayInclude(arr, top) && !isArrayInclude(arr, rightTop) && !isArrayInclude(arr, right) && !isArrayInclude(arr, bottom) && !isArrayInclude(arr, left)) {
-      vertices.push(arr[i]);
-    } else if (isArrayInclude(arr, leftBottom) && isArrayInclude(arr, leftTop) && !isArrayInclude(arr, top) && !isArrayInclude(arr, rightTop) && !isArrayInclude(arr, right) && !isArrayInclude(arr, rightBottom) && !isArrayInclude(arr, bottom) && !isArrayInclude(arr, left)) {
-      vertices.push(arr[i]);
+    /*
+     *  .#
+     *  ..
+     */
+    if (!isArrayInclude(arr, left) && !isArrayInclude(arr, leftBottom) && !isArrayInclude(arr, bottom)) {
+      map.set(JSON.stringify([left, arr[i], bottom, leftBottom]), true)
+    }
+    /*
+     *  #.
+     *  ..
+     */
+    if (!isArrayInclude(arr, right) && !isArrayInclude(arr, rightBottom) && !isArrayInclude(arr, bottom)) {
+      map.set(JSON.stringify([arr[i], right, bottom, rightBottom]), true)
+    }
+    /*
+     *  ..
+     *  .#
+     */
+    if (!isArrayInclude(arr, top) && !isArrayInclude(arr, leftTop) && !isArrayInclude(arr, left)) {
+      map.set(JSON.stringify([leftTop, top, left, arr[i]]), true)
+    }
+    /*
+     *  ..
+     *  #.
+     */
+    if (!isArrayInclude(arr, top) && !isArrayInclude(arr, rightTop) && !isArrayInclude(arr, right)) {
+      map.set(JSON.stringify([top, rightTop, arr[i], right]), true)
+    }
+
+    /*
+     *  .#
+     *  XX
+     *
+     *  X#
+     *  X.
+     *
+     *  X#
+     *  .X
+     */
+    if (
+      !isArrayInclude(arr, left) && isArrayInclude(arr, leftBottom) && isArrayInclude(arr, bottom)
+      || isArrayInclude(arr, left) && isArrayInclude(arr, leftBottom) && !isArrayInclude(arr, bottom)
+      || isArrayInclude(arr, left) && !isArrayInclude(arr, leftBottom) && isArrayInclude(arr, bottom)
+    ) {
+      map.set(JSON.stringify([left, arr[i], leftBottom, bottom]), true)
+    }
+    /*
+     *  #.
+     *  XX
+     *
+     *  #X
+     *  X.
+     *
+     *  #X
+     *  .X
+     */
+    if (
+      !isArrayInclude(arr, right) && isArrayInclude(arr, rightBottom) && isArrayInclude(arr, bottom)
+      || isArrayInclude(arr, right) && !isArrayInclude(arr, rightBottom) && isArrayInclude(arr, bottom)
+      || isArrayInclude(arr, right) && isArrayInclude(arr, rightBottom) && !isArrayInclude(arr, bottom)
+    ) {
+      map.set(JSON.stringify([arr[i], right, bottom, rightBottom]), true)
+    }
+    /*
+     *  X.
+     *  X#
+     *
+     *  .X
+     *  X#
+     *
+     *  XX
+     *  .#
+     */
+    if (
+      !isArrayInclude(arr, top) && isArrayInclude(arr, leftTop) && isArrayInclude(arr, left)
+      || isArrayInclude(arr, top) && !isArrayInclude(arr, leftTop) && isArrayInclude(arr, left)
+      || isArrayInclude(arr, top) && isArrayInclude(arr, leftTop) && !isArrayInclude(arr, left)
+    ) {
+      map.set(JSON.stringify([leftTop, top, left, arr[i]]), true)
+    }
+    /*
+     *  X.
+     *  #X
+     *
+     *  .X
+     *  #X
+     *
+     *  XX
+     *  #.
+     */
+    if (
+      isArrayInclude(arr, top) && !isArrayInclude(arr, rightTop) && isArrayInclude(arr, right)
+      || !isArrayInclude(arr, top) && isArrayInclude(arr, rightTop) && isArrayInclude(arr, right)
+      || isArrayInclude(arr, top) && isArrayInclude(arr, rightTop) && !isArrayInclude(arr, right)
+    ) {
+      map.set(JSON.stringify([top, rightTop, arr[i], right]), true)
+    }
+
+    /*
+     *  #.
+     *  .X
+     */
+    if (!isArrayInclude(arr, right) && isArrayInclude(arr, rightBottom) && !isArrayInclude(arr, bottom)) {
+      extra += 1
+      map.set(JSON.stringify([arr[i], right, bottom, rightBottom]), true)
+    }
+    /*
+     *  X.
+     *  .#
+     */
+    if (!isArrayInclude(arr, top) && isArrayInclude(arr, leftTop) && !isArrayInclude(arr, left)) {
+      extra += 1
+      map.set(JSON.stringify([leftTop, top, rightTop, arr[i]]), true)
+    }
+    /*
+     *  .X
+     *  #.
+     */
+    if (!isArrayInclude(arr, top) && isArrayInclude(arr, rightTop) && !isArrayInclude(arr, rightTop)) {
+      extra += 1
+      map.set(JSON.stringify([top, rightTop, arr[i], rightTop]), true)
+    }
+    /*
+     *  .#
+     *  X.
+     */
+    if (!isArrayInclude(arr, left) && isArrayInclude(arr, leftBottom) && !isArrayInclude(arr, bottom)) {
+      extra += 1
+      map.set(JSON.stringify([left, arr[i], leftBottom, bottom]), true)
     }
   }
 
-  return vertices;
+  return map.size;
 }
 
 /**
@@ -150,7 +237,7 @@ function solve(map, part) {
 
   let price = 0;
   for (let [tmp, it] of visited.entries()) {
-    let perimeter = part === 1 ? it.extremePoints.length : countVertices(it.extremePoints).length;
+    let perimeter = part === 1 ? it.extremePoints.length : countVertices(it.coordinates);
     price += it.area * perimeter;
   }
 
@@ -168,19 +255,20 @@ function main(input, part) {
   return solve(map, part);
 }
 
-// let example = `
-// EEEEE
-// EXXXX
-// EEEEE
-// EXXXX
-// EEEEE
-// `;
 let example = `
-AAAA
-BBCD
-BBCC
-EEEC
+AAAAAA
+AAABBA
+AAABBA
+ABBAAA
+ABBAAA
+AAAAAA
 `;
+// let example = `
+// AAAA
+// ABAA
+// AABA
+// AAAA
+// `;
 // let example = `
 // RRRRIICCFF
 // RRRRIICCCF
@@ -203,12 +291,12 @@ EEEC
 let result = main(example, 2);
 console.log('result:', result);
 
-// console.log(NAME);
-// getInput(DAY)
-//   .then(input => {
-//     const part1Result = main(input, 1);
-//     console.log('p1:', part1Result);
-//
-//     const part2Result = main(input, 2);
-//     console.log('p2:', part2Result);
-//   });
+console.log(NAME);
+getInput(DAY)
+  .then(input => {
+    const part1Result = main(input, 1);
+    console.log('p1:', part1Result);
+
+    const part2Result = main(input, 2);
+    console.log('p2:', part2Result);
+  });
