@@ -16,7 +16,7 @@ const NAME = `\n\n--- Day ${DAY}: Garden Groups ---`;
  * @param start {number[]}
  * @param originPosition {number[]}
  * @param unvisited {Set<string>}
- * @param hash {Map<string, {coordinates: number[][], area: number, extremePoints: number[][]}>}
+ * @param hash {Map<string, {coordinates: number[][], extremePoints: number[][]}>}
  */
 function traceMap(map, start, originPosition, unvisited, hash) {
   let origin = map[originPosition[0]][originPosition[1]];
@@ -26,7 +26,6 @@ function traceMap(map, start, originPosition, unvisited, hash) {
   if (isInside(map, left) && !isArrayInclude(visited.coordinates, left) && isElemEqual(map, left, origin)) {
     unvisited.delete(left.join());
     visited.coordinates.push(left);
-    visited.area += 1;
     traceMap(map, left, originPosition, unvisited, hash);
   } else if (!isArrayInclude(visited.coordinates, left)) {
     visited.extremePoints.push(left);
@@ -36,7 +35,6 @@ function traceMap(map, start, originPosition, unvisited, hash) {
   if (isInside(map, right) && !isArrayInclude(visited.coordinates, right) && isElemEqual(map, right, origin)) {
     unvisited.delete(right.join());
     visited.coordinates.push(right);
-    visited.area += 1;
     traceMap(map, right, originPosition, unvisited, hash);
   } else if (!isArrayInclude(visited.coordinates, right)) {
     visited.extremePoints.push(right);
@@ -46,7 +44,6 @@ function traceMap(map, start, originPosition, unvisited, hash) {
   if (isInside(map, top) && !isArrayInclude(visited.coordinates, top) && isElemEqual(map, top, origin)) {
     unvisited.delete(top.join());
     visited.coordinates.push(top);
-    visited.area += 1;
     traceMap(map, top, originPosition, unvisited, hash);
   } else if (!isArrayInclude(visited.coordinates, top)) {
     visited.extremePoints.push(top);
@@ -56,7 +53,6 @@ function traceMap(map, start, originPosition, unvisited, hash) {
   if (isInside(map, bottom) && !isArrayInclude(visited.coordinates, bottom) && isElemEqual(map, bottom, origin)) {
     unvisited.delete(bottom.join());
     visited.coordinates.push(bottom);
-    visited.area += 1;
     traceMap(map, bottom, originPosition, unvisited, hash);
   } else if (!isArrayInclude(visited.coordinates, bottom)) {
     visited.extremePoints.push(bottom);
@@ -68,8 +64,8 @@ function traceMap(map, start, originPosition, unvisited, hash) {
  * @return {number}
  */
 function countVertices(arr) {
-  /** @type {Map<string, boolean>} */
-  let map = new Map()
+  /** @type {Set<string>} */
+  let set = new Set();
 
   for (let i = 0; i < arr.length; i++) {
     let left = addVectors(arr[i], [0, -1]);
@@ -86,28 +82,28 @@ function countVertices(arr) {
      *  ..
      */
     if (!isArrayInclude(arr, left) && !isArrayInclude(arr, leftBottom) && !isArrayInclude(arr, bottom)) {
-      map.set(JSON.stringify([left, arr[i], bottom, leftBottom]), true)
+      set.add(JSON.stringify([left, arr[i], bottom, leftBottom]));
     }
     /*
      *  #.
      *  ..
      */
     if (!isArrayInclude(arr, right) && !isArrayInclude(arr, rightBottom) && !isArrayInclude(arr, bottom)) {
-      map.set(JSON.stringify([arr[i], right, bottom, rightBottom]), true)
+      set.add(JSON.stringify([arr[i], right, bottom, rightBottom]));
     }
     /*
      *  ..
      *  .#
      */
     if (!isArrayInclude(arr, top) && !isArrayInclude(arr, leftTop) && !isArrayInclude(arr, left)) {
-      map.set(JSON.stringify([leftTop, top, left, arr[i]]), true)
+      set.add(JSON.stringify([leftTop, top, left, arr[i]]));
     }
     /*
      *  ..
      *  #.
      */
     if (!isArrayInclude(arr, top) && !isArrayInclude(arr, rightTop) && !isArrayInclude(arr, right)) {
-      map.set(JSON.stringify([top, rightTop, arr[i], right]), true)
+      set.add(JSON.stringify([top, rightTop, arr[i], right]));
     }
 
     /*
@@ -125,7 +121,7 @@ function countVertices(arr) {
       || isArrayInclude(arr, left) && isArrayInclude(arr, leftBottom) && !isArrayInclude(arr, bottom)
       || isArrayInclude(arr, left) && !isArrayInclude(arr, leftBottom) && isArrayInclude(arr, bottom)
     ) {
-      map.set(JSON.stringify([left, arr[i], leftBottom, bottom]), true)
+      set.add(JSON.stringify([left, arr[i], leftBottom, bottom]));
     }
     /*
      *  #.
@@ -142,7 +138,7 @@ function countVertices(arr) {
       || isArrayInclude(arr, right) && !isArrayInclude(arr, rightBottom) && isArrayInclude(arr, bottom)
       || isArrayInclude(arr, right) && isArrayInclude(arr, rightBottom) && !isArrayInclude(arr, bottom)
     ) {
-      map.set(JSON.stringify([arr[i], right, bottom, rightBottom]), true)
+      set.add(JSON.stringify([arr[i], right, bottom, rightBottom]));
     }
     /*
      *  X.
@@ -159,7 +155,7 @@ function countVertices(arr) {
       || isArrayInclude(arr, top) && !isArrayInclude(arr, leftTop) && isArrayInclude(arr, left)
       || isArrayInclude(arr, top) && isArrayInclude(arr, leftTop) && !isArrayInclude(arr, left)
     ) {
-      map.set(JSON.stringify([leftTop, top, left, arr[i]]), true)
+      set.add(JSON.stringify([leftTop, top, left, arr[i]]));
     }
     /*
      *  X.
@@ -176,7 +172,7 @@ function countVertices(arr) {
       || !isArrayInclude(arr, top) && isArrayInclude(arr, rightTop) && isArrayInclude(arr, right)
       || isArrayInclude(arr, top) && isArrayInclude(arr, rightTop) && !isArrayInclude(arr, right)
     ) {
-      map.set(JSON.stringify([top, rightTop, arr[i], right]), true)
+      set.add(JSON.stringify([top, rightTop, arr[i], right]));
     }
 
     /*
@@ -184,32 +180,32 @@ function countVertices(arr) {
      *  .X
      */
     if (!isArrayInclude(arr, right) && isArrayInclude(arr, rightBottom) && !isArrayInclude(arr, bottom)) {
-      map.set(JSON.stringify([arr[i], right, bottom, rightBottom]), true)
+      set.add(JSON.stringify([arr[i], right, bottom, rightBottom]));
     }
     /*
      *  X.
      *  .#
      */
     if (!isArrayInclude(arr, top) && isArrayInclude(arr, leftTop) && !isArrayInclude(arr, left)) {
-      map.set(JSON.stringify([leftTop, top, rightTop, arr[i]]), true)
+      set.add(JSON.stringify([leftTop, top, rightTop, arr[i]]));
     }
     /*
      *  .X
      *  #.
      */
     if (!isArrayInclude(arr, top) && isArrayInclude(arr, rightTop) && !isArrayInclude(arr, right)) {
-      map.set(JSON.stringify([top, rightTop, arr[i], rightTop]), true)
+      set.add(JSON.stringify([top, rightTop, arr[i], rightTop]));
     }
     /*
      *  .#
      *  X.
      */
     if (!isArrayInclude(arr, left) && isArrayInclude(arr, leftBottom) && !isArrayInclude(arr, bottom)) {
-      map.set(JSON.stringify([left, arr[i], leftBottom, bottom]), true)
+      set.add(JSON.stringify([left, arr[i], leftBottom, bottom]));
     }
   }
 
-  return map.size;
+  return set.size;
 }
 
 /**
@@ -219,20 +215,20 @@ function countVertices(arr) {
  */
 function solve(map, part) {
   let unvisited = getAllPossibleCoordinates(map);
-  /** @type {Map<string, {coordinates: number[][], area: number, extremePoints: number[][]}>} */
+  /** @type {Map<string, {coordinates: number[][], extremePoints: number[][]}>} */
   let visited = new Map();
   while (unvisited.size) {
     let start = unvisited.values().next().value.split(',').map(Number);
     unvisited.delete(start.join());
     let origin = [...start];
-    visited.set(start.join(), { coordinates: [start], area: 1, extremePoints: [] });
+    visited.set(start.join(), { coordinates: [start], extremePoints: [] });
     traceMap(map, start, origin, unvisited, visited);
   }
 
   let price = 0;
   for (let it of visited.values()) {
     let perimeter = part === 1 ? it.extremePoints.length : countVertices(it.coordinates);
-    price += it.area * perimeter;
+    price += it.coordinates.length * perimeter;
   }
 
   return price;
