@@ -1,12 +1,11 @@
 import {
-  addVectors, getAllPossibleCoordinates,
+  addVectors,
+  getAllPossibleCoordinates,
   getInput,
-  isArrayInclude, isArraysEqual,
+  isArrayInclude,
   isElemEqual,
   isInside,
   parseInputToMap,
-  printMap,
-  putChrInMap,
 } from '../lib/index.js';
 
 const DAY = 12;
@@ -71,7 +70,6 @@ function traceMap(map, start, originPosition, unvisited, hash) {
 function countVertices(arr) {
   /** @type {Map<string, boolean>} */
   let map = new Map()
-  let extra = 0
 
   for (let i = 0; i < arr.length; i++) {
     let left = addVectors(arr[i], [0, -1]);
@@ -186,7 +184,6 @@ function countVertices(arr) {
      *  .X
      */
     if (!isArrayInclude(arr, right) && isArrayInclude(arr, rightBottom) && !isArrayInclude(arr, bottom)) {
-      extra += 1
       map.set(JSON.stringify([arr[i], right, bottom, rightBottom]), true)
     }
     /*
@@ -194,15 +191,13 @@ function countVertices(arr) {
      *  .#
      */
     if (!isArrayInclude(arr, top) && isArrayInclude(arr, leftTop) && !isArrayInclude(arr, left)) {
-      extra += 1
       map.set(JSON.stringify([leftTop, top, rightTop, arr[i]]), true)
     }
     /*
      *  .X
      *  #.
      */
-    if (!isArrayInclude(arr, top) && isArrayInclude(arr, rightTop) && !isArrayInclude(arr, rightTop)) {
-      extra += 1
+    if (!isArrayInclude(arr, top) && isArrayInclude(arr, rightTop) && !isArrayInclude(arr, right)) {
       map.set(JSON.stringify([top, rightTop, arr[i], rightTop]), true)
     }
     /*
@@ -210,7 +205,6 @@ function countVertices(arr) {
      *  X.
      */
     if (!isArrayInclude(arr, left) && isArrayInclude(arr, leftBottom) && !isArrayInclude(arr, bottom)) {
-      extra += 1
       map.set(JSON.stringify([left, arr[i], leftBottom, bottom]), true)
     }
   }
@@ -236,7 +230,7 @@ function solve(map, part) {
   }
 
   let price = 0;
-  for (let [tmp, it] of visited.entries()) {
+  for (let it of visited.values()) {
     let perimeter = part === 1 ? it.extremePoints.length : countVertices(it.coordinates);
     price += it.area * perimeter;
   }
@@ -254,42 +248,6 @@ function main(input, part) {
 
   return solve(map, part);
 }
-
-let example = `
-AAAAAA
-AAABBA
-AAABBA
-ABBAAA
-ABBAAA
-AAAAAA
-`;
-// let example = `
-// AAAA
-// ABAA
-// AABA
-// AAAA
-// `;
-// let example = `
-// RRRRIICCFF
-// RRRRIICCCF
-// VVRRRCCFFF
-// VVRCCCJFFF
-// VVVVCJJCFE
-// VVIVCCJJEE
-// VVIIICJJEE
-// MIIIIIJJEE
-// MIIISIJEEE
-// MMMISSJEEE
-// `;
-// let example = `
-// OOOOO
-// OXOXO
-// OOOOO
-// OXOXO
-// OOOOO
-// `;
-let result = main(example, 2);
-console.log('result:', result);
 
 console.log(NAME);
 getInput(DAY)
