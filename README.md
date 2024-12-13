@@ -27,7 +27,7 @@
 [![Day](https://badgen.net/badge/10/%E2%98%85%E2%98%85/green)](./d10)
 [![Day](https://badgen.net/badge/11/%E2%98%85%E2%98%85/green)](./d11)
 [![Day](https://badgen.net/badge/12/%E2%98%85%E2%98%85/green)](./d12)
-[![Day](https://badgen.net/badge/13/%E2%98%86%E2%98%86/gray)](./d13)
+[![Day](https://badgen.net/badge/13/%E2%98%85%E2%98%85/green)](./d13)
 [![Day](https://badgen.net/badge/14/%E2%98%86%E2%98%86/gray)](./d14)
 [![Day](https://badgen.net/badge/15/%E2%98%86%E2%98%86/gray)](./d15)
 [![Day](https://badgen.net/badge/16/%E2%98%86%E2%98%86/gray)](./d16)
@@ -122,4 +122,10 @@ npm run d11
 
 ```bash
 npm run d12
+```
+
+### [--- Day 13: Claw Contraption ---](https://adventofcode.com/2024/day/13)
+
+```bash
+npm run d13
 ```
