@@ -129,3 +129,9 @@ npm run d12
 ```bash
 npm run d13
 ```
+
+### [--- Day 14: Restroom Redoubt ---](https://adventofcode.com/2024/day/14)
+
+```bash
+npm run d14
+```
