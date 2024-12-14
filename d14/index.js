@@ -4,8 +4,8 @@ const DAY = 14;
 const NAME = `\n\n--- Day ${DAY}: Restroom Redoubt ---`;
 const Y = 0;
 const X = 1;
-const WIDTH = 11;
-const HEIGHT = 7;
+const WIDTH = 101;
+const HEIGHT = 103;
 const SECONDS = 100;
 
 /**
