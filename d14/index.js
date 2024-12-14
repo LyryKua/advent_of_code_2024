@@ -6,7 +6,7 @@ const Y = 0;
 const X = 1;
 const WIDTH = 11;
 const HEIGHT = 7;
-const SECONDS = 15;
+const SECONDS = 100;
 
 /**
  * @param vector {number[]}
@@ -17,11 +17,11 @@ function quadrant([y, x]) {
   let middleX = (WIDTH - 1) / 2;
   if (y >= 0 && y < middleY && x >= 0 && x < middleX) {
     return 1;
-  } else if (y >= 0 && y < middleY && x >= middleX + 2 && x < WIDTH) {
+  } else if (y >= 0 && y < middleY && x > middleX && x < WIDTH) {
     return 2;
-  } else if (y >= middleY + 2 && y < HEIGHT && x >= 0 && x < middleX) {
+  } else if (y > middleY && y < HEIGHT && x >= 0 && x < middleX) {
     return 3;
-  } else if (y >= middleY + 2 && y < HEIGHT && x >= middleX + 2 && x < WIDTH) {
+  } else if (y > middleY && y < HEIGHT && x > middleX && x < WIDTH) {
     return 4;
   }
   return 0;
@@ -32,14 +32,12 @@ function quadrant([y, x]) {
  * @param base {number}
  */
 function getNewCoordinate(coordinate, base) {
-  if (coordinate > 0) {
+  if (coordinate >= 0) {
     return coordinate % base;
-  } else if (coordinate < 0) {
-    let a = Math.abs(coordinate)
-    let b = a % base
-    return (base - b) % base;
+  } else {
+    let tmp = base - (Math.abs(coordinate) % base);
+    return tmp === base ? 0 : tmp;
   }
-  return coordinate;
 }
 
 /**
@@ -102,38 +100,38 @@ function main(input, part) {
   }
 }
 
-let example = `
-p=1,0 v=-3,0
-`;
 // let example = `
-// p=10,3 v=-1,-3
+// p=7,6 v=-1,-3
+// `;
+// let example = `
+// p=1,3 v=-1,-3
 // `;
 // let example = `
 // p=2,4 v=2,-3
 // `;
-let example = `
-p=0,4 v=3,-3
-p=6,3 v=-1,-3
-p=10,3 v=-1,2
-p=2,0 v=2,-1
-p=0,0 v=1,3
-p=3,0 v=-2,-2
-p=7,6 v=-1,-3
-p=3,0 v=-1,-2
-p=9,3 v=2,3
-p=7,3 v=-1,2
-p=2,4 v=2,-3
-p=9,5 v=-3,-3
-`;
-let result = main(example, 1);
-console.log(result);
+// let example = `
+// p=0,4 v=3,-3
+// p=6,3 v=-1,-3
+// p=10,3 v=-1,2
+// p=2,0 v=2,-1
+// p=0,0 v=1,3
+// p=3,0 v=-2,-2
+// p=7,6 v=-1,-3
+// p=3,0 v=-1,-2
+// p=9,3 v=2,3
+// p=7,3 v=-1,2
+// p=2,4 v=2,-3
+// p=9,5 v=-3,-3
+// `;
+// let result = main(example, 1);
+// console.log(result);
 
-// console.log(NAME);
-// getInput(DAY)
-//   .then(input => {
-//     const part1Result = main(input, 1);
-//     console.log('p1:', part1Result);
-//
-//     const part2Result = main(input, 2);
-//     console.log('p2:', part2Result);
-//   });
+console.log(NAME);
+getInput(DAY)
+  .then(input => {
+    const part1Result = main(input, 1);
+    console.log('p1:', part1Result);
+
+    const part2Result = main(input, 2);
+    console.log('p2:', part2Result);
+  });
