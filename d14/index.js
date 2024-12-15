@@ -1,4 +1,4 @@
-import { addVectors, getInput, multiplyVector } from '../lib/index.js';
+import { addVectors, getInput, multiplyVector, printMap } from '../lib/index.js';
 
 const DAY = 14;
 const NAME = `\n\n--- Day ${DAY}: Restroom Redoubt ---`;
@@ -80,6 +80,37 @@ function part1(robots) {
 }
 
 /**
+ *
+ */
+function part2(robots) {
+  let quadrantI = 0;
+  let quadrantII = 0;
+  let quadrantIII = 0;
+  let quadrantIV = 0;
+  let seconds = Number(process.argv[2]);
+
+  /** @type {string[][]} */
+  let map = new Array(HEIGHT);
+
+  for (let i = 0; i < map.length; i++) {
+    map[i] = new Array(WIDTH).fill(undefined).map(() => '.');
+  }
+  for (let i = 0; i < robots.length; i++) {
+    let position = robots[i][0];
+    let velocity = robots[i][1];
+    let multipliedVelocity = multiplyVector(velocity, seconds);
+    let posAfterSeconds = addVectors(position, multipliedVelocity);
+
+    let y = getNewCoordinate(posAfterSeconds[Y], HEIGHT);
+    let x = getNewCoordinate(posAfterSeconds[X], WIDTH);
+    map[y][x] = '#';
+  }
+  console.log('for steps number:', seconds);
+  printMap(map);
+  return quadrantI * quadrantII * quadrantIII * quadrantIV;
+}
+
+/**
  * @param input {string}
  * @param part {number}
  * @returns {number}
@@ -94,44 +125,18 @@ function main(input, part) {
     case 1:
       return part1(robots);
     case 2:
-      return part;
+      return part2(robots);
     default:
       throw new Error(`Only 2 parts. There is no part ${part}`);
   }
 }
 
-// let example = `
-// p=7,6 v=-1,-3
-// `;
-// let example = `
-// p=1,3 v=-1,-3
-// `;
-// let example = `
-// p=2,4 v=2,-3
-// `;
-// let example = `
-// p=0,4 v=3,-3
-// p=6,3 v=-1,-3
-// p=10,3 v=-1,2
-// p=2,0 v=2,-1
-// p=0,0 v=1,3
-// p=3,0 v=-2,-2
-// p=7,6 v=-1,-3
-// p=3,0 v=-1,-2
-// p=9,3 v=2,3
-// p=7,3 v=-1,2
-// p=2,4 v=2,-3
-// p=9,5 v=-3,-3
-// `;
-// let result = main(example, 1);
-// console.log(result);
-
+main(input, 2);
 console.log(NAME);
 getInput(DAY)
   .then(input => {
     const part1Result = main(input, 1);
     console.log('p1:', part1Result);
 
-    const part2Result = main(input, 2);
-    console.log('p2:', part2Result);
+    console.log('p2: we used Visual C here to solve this part :)');
   });
