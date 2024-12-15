@@ -42,8 +42,8 @@ function parseInputPart2(input) {
   let map = mapInput.trim().split(('\n')).map(row => {
     let newRow = row.replaceAll('#', '##');
     newRow = newRow.replaceAll('O', '[]');
-    newRow = newRow.replaceAll('@', '@.');
     newRow = newRow.replaceAll('.', '..');
+    newRow = newRow.replaceAll('@', '@.');
     return newRow.split('');
   });
   let directions = parseDirections(directionsInput);
@@ -67,12 +67,38 @@ function main(input, part) {
   }
 }
 
-console.log(NAME);
-getInput(DAY)
-  .then(input => {
-    const part1Result = main(input, 1);
-    console.log('p1:', part1Result);
+let example = `
+##########
+#..O..O.O#
+#......O.#
+#.OO..O.O#
+#..O@..O.#
+#O#..O...#
+#O..O..O.#
+#.OO.O.OO#
+#....O...#
+##########
 
-    const part2Result = main(input, 2);
-    console.log('p2:', part2Result);
-  });
+<vv>^<v^>v>^vv^v>v<>v^v<v<^vv<<<^><<><>>v<vvv<>^v^>^<<<><<v<<<v^vv^v>^
+vvv<<^>^v^^><<>>><>^<<><^vv^^<>vvv<>><^^v>^>vv<>v<<<<v<^v>^<^^>>>^<v<v
+><>vv>v^v^<>><>>>><^^>vv>v<^^^>>v^v^<^^>v^^>v^<^v>v<>>v^v^<v>v^^<^^vv<
+<<v<^>>^^^^>>>v^<>vvv^><v<<<>^^^vv^<vvv>^>v<^^^^v<>^>vvvv><>>v^<<^^^^^
+^><^><>>><>^^<<^^v>>><^<v>^<vv>>v>>>^v><>^v><<<<v>>v<v<v>vvv>^<><<>^><
+^>><>^v<><^vvv<^^<><v<<<<<><^v<<<><<<^^<v<^^^><^>>^<v^><<<^>>^v<v^v<v^
+>^>>^v>vv>^<<^v<>><<><<v<<v><>v<^vv<<<>^^v^>^^>>><<^v>>v^v><^^>>^<>vv^
+<><^^>^^^<><vvvvv^v<v<<>^v<v>v<<^><<><<><<<^^<<<^<<>><<><^^^>^^<>^>v<>
+^^>vv<^v^v<vv>^<><v<^v>^^^>>>^^vvv^>vvv<>>>^<^>>>>>^<<^v>^vvv<>^<><<v>
+v^^>>><<^^<>>^v^<v^vv<>v^<<>^<^v^v><^<<<><<^<v><v<>vv>>v><v^<vv<>v^<<^
+`;
+let result = main(example, 2)
+console.log(result);
+//
+// console.log(NAME);
+// getInput(DAY)
+//   .then(input => {
+//     const part1Result = main(input, 1);
+//     console.log('p1:', part1Result);
+//
+//     const part2Result = main(input, 2);
+//     console.log('p2:', part2Result);
+//   });

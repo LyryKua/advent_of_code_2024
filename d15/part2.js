@@ -1,4 +1,4 @@
-import { addVectors, findChar } from '../lib/index.js';
+import { addVectors, findChar, printMap } from '../lib/index.js';
 
 /**
  * @param map {string[][]}
@@ -25,11 +25,11 @@ function moveRobot(map, start, direction) {
  * @returns {number}
  */
 export function solvePart2(map, directions) {
-
+  printMap(map)
   for (let direction of directions) {
     let [start] = findChar(map, '@');
     map = moveRobot(map, start, direction);
   }
 
-  return countBoxes(map);
+  return 0;
 }
