@@ -139,5 +139,11 @@ npm run d14
 ### [--- Day 15: Warehouse Woes ---](https://adventofcode.com/2024/day/15)
 
 ```bash
-npm run d14
+npm run d15
+```
+
+### [--- Day 16: Reindeer Maze ---](https://adventofcode.com/2024/day/16)
+
+```bash
+npm run d16
 ```
