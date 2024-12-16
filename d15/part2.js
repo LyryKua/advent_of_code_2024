@@ -1,4 +1,4 @@
-import { addVectors, findChar, isArrayInclude, isArraysEqual, printMap } from '../lib/index.js';
+import { addVectors, findChar, isArraysEqual } from '../lib/index.js';
 
 /**
  * @param map {string[][]}
@@ -18,46 +18,43 @@ function countBoxes(map) {
  * @param map {string[][]}
  * @param start {number[]}
  * @param direction {number[]}
+ * @returns {boolean}
+ */
+function canMoveV(map, start, direction) {
+  let nextStart = addVectors(start, direction);
+  let nextStartChr = map[nextStart[0]][nextStart[1]];
+  if (nextStartChr === '#') return false;
+  if (nextStartChr === '.') return true;
+
+  let first, other;
+  first = canMoveV(map, addVectors(start, direction), direction);
+  if (nextStartChr === '[')
+    other = canMoveV(map, addVectors(start, [direction[0], direction[1] + 1]), direction);
+  else
+    other = canMoveV(map, addVectors(start, [direction[0], direction[1] - 1]), direction);
+  return (first && other);
+}
+
+/**
+ * @param map {string[][]}
+ * @param start {number[]}
+ * @param direction {number[]}
  * @returns {string[][]}
  */
-function moveBox(map, start, direction) {
-  let startChr = map[start[0]][start[1]];
-  let left = startChr === '[' ? [...start] : addVectors(start, [0, -1]);
-  let leftChr = map[left[0]][left[1]];
-  let right = startChr === '[' ? addVectors(start, [0, 1]) : [...start];
-  let rightChr = map[right[0]][right[1]];
-  let newLeft = addVectors(left, direction);
-  let newRight = addVectors(right, direction);
-
-  if (isArraysEqual(direction, [0, -1])) {
-    if (map[newLeft[0]][newLeft[1]] === ']') moveBox(map, newLeft, direction);
-
-    if (map[newLeft[0]][newLeft[1]] === '.') {
-      map[newLeft[0]][newLeft[1]] = '[';
-      map[newRight[0]][newRight[1]] = ']';
-      map[right[0]][right[1]] = '.';
-    }
-  } else if (isArraysEqual(direction, [0, 1])) {
-    if (map[newRight[0]][newRight[1]] === '[') moveBox(map, newRight, direction);
-
-    if (map[newRight[0]][newRight[1]] === '.') {
-      map[newLeft[0]][newLeft[1]] = '[';
-      map[newRight[0]][newRight[1]] = ']';
-      map[left[0]][left[1]] = '.';
-    }
-  } else {
-    if (map[newLeft[0]][newLeft[1]] === '[' || map[newLeft[0]][newLeft[1]] === ']') moveBox(map, newLeft, direction);
-    if (map[newRight[0]][newRight[1]] === '[' || map[newRight[0]][newRight[1]] === ']') moveBox(map, newRight, direction);
-
-    if (map[newLeft[0]][newLeft[1]] === '.' && map[newRight[0]][newRight[1]] === '.') {
-      map[newLeft[0]][newLeft[1]] = leftChr;
-      map[newRight[0]][newRight[1]] = rightChr;
-      map[left[0]][left[1]] = '.';
-      map[right[0]][right[1]] = '.';
-    }
-
+function moveV(map, start, direction) {
+  let nextStart = addVectors(start, direction);
+  let nextStartChr = map[nextStart[0]][nextStart[1]];
+  if (nextStartChr === '[') {
+    moveV(map, nextStart, direction);
+    moveV(map, addVectors(start, [direction[0], direction[1] + 1]), direction);
+  } else if (nextStartChr === ']') {
+    moveV(map, nextStart, direction);
+    moveV(map, addVectors(start, [direction[0], direction[1] - 1]), direction);
   }
-  return map;
+  if (map[nextStart[0]][nextStart[1]] === '.') {
+    map[nextStart[0]][nextStart[1]] = map[start[0]][start[1]];
+    map[start[0]][start[1]] = '.';
+  }
 }
 
 
@@ -67,18 +64,16 @@ function moveBox(map, start, direction) {
  * @param direction {number[]}
  * @returns {string[][]}
  */
-function moveRobot(map, start, direction) {
-  let startChr = map[start[0]][start[1]];
-  let newStart = addVectors(start, direction);
-  if (map[newStart[0]][newStart[1]] === '[' || map[newStart[0]][newStart[1]] === ']') {
-    moveBox(map, newStart, direction);
+function moveH(map, start, direction) {
+  let nextStart = addVectors(start, direction);
+  let nextStartChr = map[nextStart[0]][nextStart[1]];
+  if (nextStartChr === '[' || nextStartChr === ']') {
+    moveH(map, nextStart, direction);
   }
-  if (map[newStart[0]][newStart[1]] === '.') {
-    map[newStart[0]][newStart[1]] = startChr;
+  if (map[nextStart[0]][nextStart[1]] === '.') {
+    map[nextStart[0]][nextStart[1]] = map[start[0]][start[1]];
     map[start[0]][start[1]] = '.';
   }
-
-  return map;
 }
 
 /**
@@ -87,12 +82,16 @@ function moveRobot(map, start, direction) {
  * @returns {number}
  */
 export function solvePart2(map, directions) {
-  // printMap(map);
   for (let direction of directions) {
     let [start] = findChar(map, '@');
-    map = moveRobot(map, start, direction);
+    if (isArraysEqual(direction, [1, 0]) || isArraysEqual(direction, [-1, 0])) {
+      if (canMoveV(map, start, direction)) {
+        moveV(map, start, direction);
+      }
+    } else {
+      moveH(map, start, direction);
+    }
   }
-  // printMap(map);
 
   return countBoxes(map);
 }

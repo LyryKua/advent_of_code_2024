@@ -7,16 +7,16 @@ const NAME = `\n\n--- Day ${DAY}: Warehouse Woes ---`;
 
 /**
  * @param input {string}
- * @returns {Set<number[]>}
+ * @returns {number[][]}
  */
 function parseDirections(input) {
-  return new Set(input.trim().split('').map(it => {
+  return input.trim().split('').map(it => {
     if (it === '>') return [0, 1];
     if (it === '<') return [0, -1];
     if (it === '^') return [-1, 0];
     if (it === 'v') return [1, 0];
     return [0, 0];
-  }));
+  });
 }
 
 /**
@@ -34,7 +34,7 @@ function parseInputPart1(input) {
 
 /**
  * @param input {string}
- * @returns {[string[][], Set<number[]>]}
+ * @returns {[string[][], number[][]]}
  */
 function parseInputPart2(input) {
   let [mapInput, directionsInput] = input.trim().split('\n\n');
@@ -67,49 +67,12 @@ function main(input, part) {
   }
 }
 
-let example = `
-#######
-#...#.#
-#.....#
-#..OO@#
-#..O..#
-#.....#
-#######
+console.log(NAME);
+getInput(DAY)
+  .then(input => {
+    const part1Result = main(input, 1);
+    console.log('p1:', part1Result);
 
-<vv<<^^<<^^
-`;
-// let example = `
-// ##########
-// #..O..O.O#
-// #......O.#
-// #.OO..O.O#
-// #..O@..O.#
-// #O#..O...#
-// #O..O..O.#
-// #.OO.O.OO#
-// #....O...#
-// ##########
-//
-// <vv>^<v^>v>^vv^v>v<>v^v<v<^vv<<<^><<><>>v<vvv<>^v^>^<<<><<v<<<v^vv^v>^
-// vvv<<^>^v^^><<>>><>^<<><^vv^^<>vvv<>><^^v>^>vv<>v<<<<v<^v>^<^^>>>^<v<v
-// ><>vv>v^v^<>><>>>><^^>vv>v<^^^>>v^v^<^^>v^^>v^<^v>v<>>v^v^<v>v^^<^^vv<
-// <<v<^>>^^^^>>>v^<>vvv^><v<<<>^^^vv^<vvv>^>v<^^^^v<>^>vvvv><>>v^<<^^^^^
-// ^><^><>>><>^^<<^^v>>><^<v>^<vv>>v>>>^v><>^v><<<<v>>v<v<v>vvv>^<><<>^><
-// ^>><>^v<><^vvv<^^<><v<<<<<><^v<<<><<<^^<v<^^^><^>>^<v^><<<^>>^v<v^v<v^
-// >^>>^v>vv>^<<^v<>><<><<v<<v><>v<^vv<<<>^^v^>^^>>><<^v>>v^v><^^>>^<>vv^
-// <><^^>^^^<><vvvvv^v<v<<>^v<v>v<<^><<><<><<<^^<<<^<<>><<><^^^>^^<>^>v<>
-// ^^>vv<^v^v<vv>^<><v<^v>^^^>>>^^vvv^>vvv<>>>^<^>>>>>^<<^v>^vvv<>^<><<v>
-// v^^>>><<^^<>>^v^<v^vv<>v^<<>^<^v^v><^<<<><<^<v><v<>vv>>v><v^<vv<>v^<<^
-// `;
-let result = main(example, 2)
-console.log(result);
-//
-// console.log(NAME);
-// getInput(DAY)
-//   .then(input => {
-//     const part1Result = main(input, 1);
-//     console.log('p1:', part1Result);
-//
-//     const part2Result = main(input, 2);
-//     console.log('p2:', part2Result);
-//   });
+    const part2Result = main(input, 2);
+    console.log('p2:', part2Result);
+  });
