@@ -131,25 +131,28 @@ function getPath(map, end) {
  */
 function minDisQ(q, d) {
   let min = Infinity;
-  let minI = -1;
+  let minI = [];
   for (let i = 0; i < q.length; i++) {
     let it = d[q[i].node[0]][q[i].node[1]];
-    if (it < min) {
+    if (it <= min) {
       min = it;
-      minI = i;
+      minI.push(i);
     }
   }
-  let newQ = q.filter((_, index) => minI !== index);
-  return [q[minI], newQ];
+  let newQ = q.filter((_, index) => !minI.includes(index));
+  return [minI.map(i => q[i]), newQ];
 }
 
 /**
  * @param maze {string[][]}
  * @param start {number[]}
  * @param end {number[]}
+ * @param l
+ * @param t
+ * @param r
  * @returns {*}
  */
-function dijkstraMaze(maze, start, end) {
+function dijkstraMaze(maze, start, end, l, t, r) {
   let direction = [0, -1];
   let queue = [{ node: start, direction }];
   let visited = createMap(maze.length, maze[0].length, 0);
@@ -158,32 +161,36 @@ function dijkstraMaze(maze, start, end) {
   distances[start[0]][start[1]] = 0;
   while (queue.length > 0) {
     let tmp = minDisQ(queue, distances);
-    let current = tmp[0];
+    let currents = tmp[0];
     queue = tmp[1];
-    visited[current.node[0]][current.node[1]] = 1;
-    let top = addVectors(current.node, current.direction);
-    if (visited[top[0]][top[1]] !== 1 && maze[top[0]][top[1]] !== '#') {
-      queue.push({ node: top, direction: current.direction });
-      if (distances[top[0]][top[1]] > distances[current.node[0]][current.node[1]] + 1) {
-        map.set(top.join(), current.node);
+    for (let current of currents) {
+
+      // let current = tmp[0];
+      visited[current.node[0]][current.node[1]] = 1;
+      let top = addVectors(current.node, current.direction);
+      if (visited[top[0]][top[1]] !== 1 && maze[top[0]][top[1]] !== '#') {
+        queue.push({ node: top, direction: current.direction });
+        if (distances[top[0]][top[1]] > distances[current.node[0]][current.node[1]] + t) {
+          map.set(top.join(), current.node);
+        }
+        distances[top[0]][top[1]] = Math.min(distances[top[0]][top[1]], distances[current.node[0]][current.node[1]] + t);
       }
-      distances[top[0]][top[1]] = Math.min(distances[top[0]][top[1]], distances[current.node[0]][current.node[1]] + 1);
-    }
-    let right = addVectors(current.node, turn90DegreeRight(current.direction));
-    if (visited[right[0]][right[1]] !== 1 && maze[right[0]][right[1]] !== '#') {
-      queue.push({ node: right, direction: turn90DegreeRight(current.direction) });
-      if (distances[right[0]][right[1]] > distances[current.node[0]][current.node[1]] + 1001) {
-        map.set(right.join(), current.node);
+      let right = addVectors(current.node, turn90DegreeRight(current.direction));
+      if (visited[right[0]][right[1]] !== 1 && maze[right[0]][right[1]] !== '#') {
+        queue.push({ node: right, direction: turn90DegreeRight(current.direction) });
+        if (distances[right[0]][right[1]] > distances[current.node[0]][current.node[1]] + r) {
+          map.set(right.join(), current.node);
+        }
+        distances[right[0]][right[1]] = Math.min(distances[right[0]][right[1]], distances[current.node[0]][current.node[1]] + r);
       }
-      distances[right[0]][right[1]] = Math.min(distances[right[0]][right[1]], distances[current.node[0]][current.node[1]] + 1001);
-    }
-    let left = addVectors(current.node, turn90DegreeLeft(current.direction));
-    if (visited[left[0]][left[1]] !== 1 && maze[left[0]][left[1]] !== '#') {
-      queue.push({ node: left, direction: turn90DegreeLeft(current.direction) });
-      if (distances[left[0]][left[1]] > distances[current.node[0]][current.node[1]] + 1001) {
-        map.set(left.join(), current.node);
+      let left = addVectors(current.node, turn90DegreeLeft(current.direction));
+      if (visited[left[0]][left[1]] !== 1 && maze[left[0]][left[1]] !== '#') {
+        queue.push({ node: left, direction: turn90DegreeLeft(current.direction) });
+        if (distances[left[0]][left[1]] > distances[current.node[0]][current.node[1]] + l) {
+          map.set(left.join(), current.node);
+        }
+        distances[left[0]][left[1]] = Math.min(distances[left[0]][left[1]], distances[current.node[0]][current.node[1]] + l);
       }
-      distances[left[0]][left[1]] = Math.min(distances[left[0]][left[1]], distances[current.node[0]][current.node[1]] + 1001);
     }
     // let neighbors = getNeighbors(maze, current.node);
     // for (let i = 0; i < neighbors.length; i++) {
@@ -209,14 +216,45 @@ function part1(maze) {
   let [end] = findChar(maze, 'E');
 
   // printMap(maze);
-  let path = dijkstraMaze(maze, start, end);
-  // let newMap = duplicateMap(maze);
-  // for (let j = 0; j < path.length; j++) {
-  //   putChrInMap(newMap, path[j], '*');
-  // }
-  // printMap(newMap);
+  /** @type {Map<number, string[][]>} */
+  let mapVariants = new Map();
+  let variants = [
+    [1001, 1, 1001],
+    [1001, 1, 1],
+    [1, 1, 1001],
+  ];
+  for (let i = 0; i < variants.length; i++) {
+    let path = dijkstraMaze(maze, start, end, variants[i][0], variants[i][1], variants[i][2]);
+    let newMap = duplicateMap(maze);
+    for (let j = 0; j < path.length; j++) {
+      putChrInMap(newMap, path[j], 'O');
+    }
+    mapVariants.set(i, newMap);
+  }
 
-  let nbr = countMostTurns([path]);
+  let answerMaze = duplicateMap(maze);
+  for (let [_, mapVariant] of mapVariants) {
+    for (let i = 0; i < answerMaze.length; i++) {
+      for (let j = 0; j < answerMaze[0].length; j++) {
+        if (mapVariant[i][j] === '.' || mapVariant[i][j] === '#') {
+          continue;
+        }
+        if (mapVariant[i][j] === 'O') {
+          answerMaze[i][j] = mapVariant[i][j];
+        }
+      }
+    }
+  }
+
+  let nbr = 0;
+  for (let i = 0; i < answerMaze.length; i++) {
+    for (let j = 0; j < answerMaze[0].length; j++) {
+      if (answerMaze[i][j] === 'O') nbr += 1;
+    }
+  }
+  printMap(answerMaze);
+
+
   console.log('nbr:', nbr);
 
 
@@ -241,21 +279,25 @@ function main(input, part) {
   }
 }
 
-let example12 = `
+let example3 = `
 #######
-#...#E#
+#....E#
 #.#.#.#
-#.#...#
+#.....#
 #.#.#.#
-#S#...#
+#S....#
 #######
 `;
 let example1 = `
-#####
-###E#
-###.#
-#S..#
-#####
+###############
+#...........#E#
+###.#.#####.#.#
+#...#.....#.#.#
+#.#.#.###.#.#.#
+#.....#...#.#.#
+#.###.#.#.#.#.#
+#S..#.....#...#
+############### 
 `;
 let example = `
 ###############
@@ -277,12 +319,12 @@ let example = `
 let result = main(example, 1);
 console.log(result);
 
-console.log(NAME);
-getInput(DAY)
-  .then(input => {
-    const part1Result = main(input, 1);
-    console.log('p1:', part1Result);
-
-    const part2Result = main(input, 2);
-    console.log('p2:', part2Result);
-  });
+// console.log(NAME);
+// getInput(DAY)
+//   .then(input => {
+//     // const part1Result = main(input, 1);
+//     // console.log('p1:', part1Result);
+//     //
+//     const part2Result = main(input, 1);
+//     console.log('p2:', part2Result);
+//   });
