@@ -1,4 +1,4 @@
-import { getInput } from '../lib/index.js';
+import { getInput, isArraysEqual } from '../lib/index.js';
 
 const DAY = 17;
 const NAME = `\n\n--- Day ${DAY}: Chronospatial Computer ---`;
@@ -53,9 +53,10 @@ function getOperand(combo, a, b, c) {
  * @param b {number}
  * @param c {number}
  * @param program {number[]}
- * @returns {string}
+ * @param isPart2 {boolean}
+ * @returns {number[]}
  */
-function part1(a, b, c, program) {
+function part1(a, b, c, program, isPart2 = false) {
   /** @type {number[]} */
   let outputs = [];
   let i = 0;
@@ -69,7 +70,7 @@ function part1(a, b, c, program) {
 
     switch (opcode) {
       case 'adv': {
-        a = Math.floor(a / Math.pow(2, operand));
+        a = a >> operand;
         break;
       }
       case 'bxl': {
@@ -91,14 +92,21 @@ function part1(a, b, c, program) {
       }
       case'out': {
         outputs.push(operand % 8);
+        if (isPart2) {
+          let sliceProgram = program.slice(0, outputs.length);
+          if (!isArraysEqual(outputs, sliceProgram)) {
+            return outputs;
+          }
+        }
+
         break;
       }
       case 'bdv': {
-        b = Math.floor(a / Math.pow(2, operand));
+        b = a >> operand;
         break;
       }
       case 'cdv': {
-        c = Math.floor(a / Math.pow(2, operand));
+        c = a >> operand;
         break;
       }
       default:
@@ -106,7 +114,28 @@ function part1(a, b, c, program) {
     }
     i += 2;
   }
-  return outputs.join();
+  return outputs;
+}
+
+/**
+ * @param a {number}
+ * @param b {number}
+ * @param c {number}
+ * @param program {number[]}
+ * @returns {number}
+ */
+function part2(a, b, c, program) {
+  /** @type {number[]} */
+  let outputs = [];
+
+  let newA = 0;
+  while (!isArraysEqual(outputs, program)) {
+    outputs = part1(newA, b, c, [...program], true);
+    // console.log(newA, '\t\t\t', outputs);
+    newA += 1;
+  }
+
+  return newA;
 }
 
 /**
@@ -120,33 +149,31 @@ function main(input, part) {
   let program = programInput.split(': ')[1].split(',').map(Number);
 
   switch (part) {
-    case 1: {
-      return part1(a, b, c, program);
-    }
-
+    case 1:
+      return part1(a, b, c, program).join();
     case 2:
-      return '';
+      return part2(a, b, c, program).toString();
     default:
       throw new Error(`Only 2 parts. There is no part ${part}`);
   }
 }
 
 let example = `
-Register A: 729
+Register A: 2024
 Register B: 0
 Register C: 0
 
-Program: 0,1,5,4,3,0
+Program: 0,3,5,4,3,0
 `;
-// let result = main(example, 1);
-// console.log(result);
-//
-console.log(NAME);
-getInput(DAY)
-  .then(input => {
-    const part1Result = main(input, 1);
-    console.log('p1:', part1Result);
+let result = main(example, 1);
+console.log(result);
 
-    const part2Result = main(input, 2);
-    console.log('p2:', part2Result);
-  });
+// console.log(NAME);
+// getInput(DAY)
+//   .then(input => {
+//     const part1Result = main(input, 1);
+//     console.log('p1:', part1Result);
+//
+//     const part2Result = main(input, 2);
+//     console.log('p2:', part2Result);
+//   });
