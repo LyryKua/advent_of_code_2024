@@ -1,11 +1,11 @@
-import { addVectors, createMap, getInput, getNeighbors, isArrayInclude, isInside, printMap } from '../lib/index.js';
+import { addVectors, createMap, getInput, isArrayInclude } from '../lib/index.js';
 
 const DAY = 18;
 const NAME = `\n\n--- Day ${DAY}: RAM Run ---`;
 
-const HEIGHT = 7;
-const WIDTH = 7;
-const NBR_BYTES = 12;
+const HEIGHT = 71;
+const WIDTH = 71;
+const NBR_BYTES = 1024;
 const START = [0, 0];
 const END = [HEIGHT - 1, WIDTH - 1];
 
@@ -53,15 +53,15 @@ function getPath(map, end) {
 function part1(bytes) {
   let map = new Map();
   let queue = [START];
-  let visited = [];
+  let visited = [START];
   let distances = createMap(HEIGHT, WIDTH, Infinity);
   distances[START[0]][START[1]] = 0;
   while (queue.length > 0) {
     let current = queue.shift();
-    visited.push(current);
     let left = addVectors(current, [0, -1]);
     if (!isArrayInclude(visited, left) && left[0] >= 0 && left[0] < HEIGHT && left[1] >= 0 && left[1] < WIDTH && !isArrayInclude(bytes, left)) {
       queue.push(left);
+      visited.push(left);
       if (distances[left[0]][left[1]] > distances[current[0]][current[1]] + 1) {
         map.set(left.join(), current);
       }
@@ -70,6 +70,7 @@ function part1(bytes) {
     let bottom = addVectors(current, [1, 0]);
     if (!isArrayInclude(visited, bottom) && bottom[0] >= 0 && bottom[0] < HEIGHT && bottom[1] >= 0 && bottom[1] < WIDTH && !isArrayInclude(bytes, bottom)) {
       queue.push(bottom);
+      visited.push(bottom);
       if (distances[bottom[0]][bottom[1]] > distances[current[0]][current[1]] + 1) {
         map.set(bottom.join(), current);
       }
@@ -78,6 +79,7 @@ function part1(bytes) {
     let right = addVectors(current, [0, 1]);
     if (!isArrayInclude(visited, right) && right[0] >= 0 && right[0] < HEIGHT && right[1] >= 0 && right[1] < WIDTH && !isArrayInclude(bytes, right)) {
       queue.push(right);
+      visited.push(right);
       if (distances[right[0]][right[1]] > distances[current[0]][current[1]] + 1) {
         map.set(right.join(), current);
       }
@@ -86,6 +88,7 @@ function part1(bytes) {
     let top = addVectors(current, [-1, 0]);
     if (!isArrayInclude(visited, top) && top[0] >= 0 && top[0] < HEIGHT && top[1] >= 0 && top[1] < WIDTH && !isArrayInclude(bytes, top)) {
       queue.push(top);
+      visited.push(top);
       if (distances[top[0]][top[1]] > distances[current[0]][current[1]] + 1) {
         map.set(top.join(), current);
       }
@@ -106,7 +109,7 @@ function main(input, part) {
     case 1: {
       let b = bytes.slice(0, NBR_BYTES);
       let path = part1(b);
-      printGrid(b, path);
+      // printGrid(b, path);
       return path.length - 1;
     }
     case 2:
@@ -143,15 +146,15 @@ let example = `
 1,6
 2,0
 `;
-let result = main(example, 1);
-console.log(result);
+// let result = main(example, 1);
+// console.log(result);
 
-// console.log(NAME);
-// getInput(DAY)
-//   .then(input => {
-//     const part1Result = main(input, 1);
-//     console.log('p1:', part1Result);
-//
-//     const part2Result = main(input, 2);
-//     console.log('p2:', part2Result);
-//   });
+console.log(NAME);
+getInput(DAY)
+  .then(input => {
+    const part1Result = main(input, 1);
+    console.log('p1:', part1Result);
+
+    const part2Result = main(input, 2);
+    console.log('p2:', part2Result);
+  });
