@@ -31,7 +31,7 @@
 [![Day](https://badgen.net/badge/14/%E2%98%85%E2%98%85/green)](./d14)
 [![Day](https://badgen.net/badge/15/%E2%98%85%E2%98%85/green)](./d15)
 [![Day](https://badgen.net/badge/16/%E2%98%85%E2%98%86/yellow)](./d16)
-[![Day](https://badgen.net/badge/17/%E2%98%85%E2%98%86/yellow)](./d17)
+[![Day](https://badgen.net/badge/17/%E2%98%85%E2%98%85/green)](./d17)
 [![Day](https://badgen.net/badge/18/%E2%98%86%E2%98%86/gray)](./d18)
 [![Day](https://badgen.net/badge/19/%E2%98%86%E2%98%86/gray)](./d19)
 [![Day](https://badgen.net/badge/20/%E2%98%86%E2%98%86/gray)](./d20)
@@ -151,5 +151,11 @@ npm run d16
 ### [--- Day 17: Chronospatial Computer ---](https://adventofcode.com/2024/day/17)
 
 ```bash
-npm run d16
+npm run d17
+```
+
+### [--- Day 18: RAM Run ---](https://adventofcode.com/2024/day/18)
+
+```bash
+npm run d18
 ```
