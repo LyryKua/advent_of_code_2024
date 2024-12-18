@@ -1,4 +1,4 @@
-import { addVectors, createMap, getInput, isArrayInclude } from '../lib/index.js';
+import { addVectors, createMap, getInput, getNeighbors, isArrayInclude } from '../lib/index.js';
 
 const DAY = 18;
 const NAME = `\n\n--- Day ${DAY}: RAM Run ---`;
@@ -58,41 +58,21 @@ function part1(bytes) {
   distances[START[0]][START[1]] = 0;
   while (queue.length > 0) {
     let current = queue.shift();
-    let left = addVectors(current, [0, -1]);
-    if (!isArrayInclude(visited, left) && left[0] >= 0 && left[0] < HEIGHT && left[1] >= 0 && left[1] < WIDTH && !isArrayInclude(bytes, left)) {
-      queue.push(left);
-      visited.push(left);
-      if (distances[left[0]][left[1]] > distances[current[0]][current[1]] + 1) {
-        map.set(left.join(), current);
+    let neighbors = [
+      addVectors(current, [0, -1]),
+      addVectors(current, [1, 0]),
+      addVectors(current, [0, 1]),
+      addVectors(current, [-1, 0]),
+    ];
+    for (let neighbor of neighbors) {
+      if (!isArrayInclude(visited, neighbor) && neighbor[0] >= 0 && neighbor[0] < HEIGHT && neighbor[1] >= 0 && neighbor[1] < WIDTH && !isArrayInclude(bytes, neighbor)) {
+        queue.push(neighbor);
+        visited.push(neighbor);
+        if (distances[neighbor[0]][neighbor[1]] > distances[current[0]][current[1]] + 1) {
+          map.set(neighbor.join(), current);
+        }
+        distances[neighbor[0]][neighbor[1]] = Math.min(distances[neighbor[0]][neighbor[1]], distances[current[0]][current[1]] + 1);
       }
-      distances[left[0]][left[1]] = Math.min(distances[left[0]][left[1]], distances[current[0]][current[1]] + 1);
-    }
-    let bottom = addVectors(current, [1, 0]);
-    if (!isArrayInclude(visited, bottom) && bottom[0] >= 0 && bottom[0] < HEIGHT && bottom[1] >= 0 && bottom[1] < WIDTH && !isArrayInclude(bytes, bottom)) {
-      queue.push(bottom);
-      visited.push(bottom);
-      if (distances[bottom[0]][bottom[1]] > distances[current[0]][current[1]] + 1) {
-        map.set(bottom.join(), current);
-      }
-      distances[bottom[0]][bottom[1]] = Math.min(distances[bottom[0]][bottom[1]], distances[current[0]][current[1]] + 1);
-    }
-    let right = addVectors(current, [0, 1]);
-    if (!isArrayInclude(visited, right) && right[0] >= 0 && right[0] < HEIGHT && right[1] >= 0 && right[1] < WIDTH && !isArrayInclude(bytes, right)) {
-      queue.push(right);
-      visited.push(right);
-      if (distances[right[0]][right[1]] > distances[current[0]][current[1]] + 1) {
-        map.set(right.join(), current);
-      }
-      distances[right[0]][right[1]] = Math.min(distances[right[0]][right[1]], distances[current[0]][current[1]] + 1);
-    }
-    let top = addVectors(current, [-1, 0]);
-    if (!isArrayInclude(visited, top) && top[0] >= 0 && top[0] < HEIGHT && top[1] >= 0 && top[1] < WIDTH && !isArrayInclude(bytes, top)) {
-      queue.push(top);
-      visited.push(top);
-      if (distances[top[0]][top[1]] > distances[current[0]][current[1]] + 1) {
-        map.set(top.join(), current);
-      }
-      distances[top[0]][top[1]] = Math.min(distances[top[0]][top[1]], distances[current[0]][current[1]] + 1);
     }
   }
   return getPath(map, END);
