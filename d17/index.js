@@ -22,6 +22,10 @@ const NAME = `\n\n--- Day ${DAY}: Chronospatial Computer ---`;
  */
 const OPCODE = ['adv', 'bxl', 'bst', 'jnz', 'bxc', 'out', 'bdv', 'cdv'];
 
+function mod(n, m) {
+  return ((n % m) + m) % m;
+}
+
 /**
  * @param combo {number}
  * @param a {number}
@@ -70,15 +74,15 @@ function part1(a, b, c, program, isPart2 = false) {
 
     switch (opcode) {
       case 'adv': {
-        a = a >> operand;
+        a = Math.floor(a / Math.pow(2, operand));
         break;
       }
       case 'bxl': {
-        b = b ^ literalOperand;
+        b = b ^ literalOperand >>> 0;
         break;
       }
       case 'bst': {
-        b = operand % 8;
+        b = mod(operand, 8);
         break;
       }
       case 'jnz': {
@@ -87,11 +91,11 @@ function part1(a, b, c, program, isPart2 = false) {
         break;
       }
       case'bxc': {
-        b = b ^ c;
+        b = (b ^ c) >>> 0;
         break;
       }
       case'out': {
-        outputs.push(operand % 8);
+        outputs.push(mod(operand, 8));
         if (isPart2) {
           let sliceProgram = program.slice(0, outputs.length);
           if (!isArraysEqual(outputs, sliceProgram)) {
@@ -102,11 +106,11 @@ function part1(a, b, c, program, isPart2 = false) {
         break;
       }
       case 'bdv': {
-        b = a >> operand;
+        b = Math.floor(a / Math.pow(2, operand));
         break;
       }
       case 'cdv': {
-        c = a >> operand;
+        c = Math.floor(a / Math.pow(2, operand));
         break;
       }
       default:
@@ -118,24 +122,36 @@ function part1(a, b, c, program, isPart2 = false) {
 }
 
 /**
- * @param a {number}
  * @param b {number}
  * @param c {number}
  * @param program {number[]}
  * @returns {number}
  */
-function part2(a, b, c, program) {
-  /** @type {number[]} */
-  let outputs = [];
+function part2(b, c, program) {
+  let answer = 0;
+  /** @type {{result: string, length: number}[]} */
+  let queue = [];
+  queue.push({ result: '', length: 0 });
+  while (queue.length) {
+    let current = queue.shift();
+    if (current.length === program.length) {
+      answer = parseInt(current.result, 2);
+      break;
+    }
 
-  let newA = 0;
-  while (!isArraysEqual(outputs, program)) {
-    outputs = part1(newA, b, c, [...program], true);
-    // console.log(newA, '\t\t\t', outputs);
-    newA += 1;
+    let from = parseInt(current.result + '000', 2);
+    let to = parseInt(current.result + '111', 2);
+
+    let expect = program.slice((current.length + 1) * -1);
+    for (let i = from; i <= to; i++) {
+      let r = part1(i, b, c, program);
+      if (isArraysEqual(expect, r)) {
+        queue.push({ result: i.toString(2), length: current.length + 1 });
+      }
+    }
   }
 
-  return newA;
+  return answer;
 }
 
 /**
@@ -152,28 +168,18 @@ function main(input, part) {
     case 1:
       return part1(a, b, c, program).join();
     case 2:
-      return part2(a, b, c, program).toString();
+      return part2(b, c, program).toString();
     default:
       throw new Error(`Only 2 parts. There is no part ${part}`);
   }
 }
 
-let example = `
-Register A: 2024
-Register B: 0
-Register C: 0
+console.log(NAME);
+getInput(DAY)
+  .then(input => {
+    const part1Result = main(input, 1);
+    console.log('p1:', part1Result);
 
-Program: 0,3,5,4,3,0
-`;
-let result = main(example, 1);
-console.log(result);
-
-// console.log(NAME);
-// getInput(DAY)
-//   .then(input => {
-//     const part1Result = main(input, 1);
-//     console.log('p1:', part1Result);
-//
-//     const part2Result = main(input, 2);
-//     console.log('p2:', part2Result);
-//   });
+    const part2Result = main(input, 2);
+    console.log('p2:', part2Result);
+  });
