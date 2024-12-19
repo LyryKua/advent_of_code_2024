@@ -4,40 +4,10 @@ const DAY = 19;
 const NAME = `\n\n--- Day ${DAY}: Linen Layout ---`;
 
 /**
- * @param design {string}
- * @param map {Map<string, boolean>}
- * @returns {Map<string, boolean>}
- */
-function allSplits(design, map = new Map()) {
-  if (map.has(design)) {
-    return map;
-  }
-
-  map.set(design, true);
-  if (design.length === 1) {
-    return map;
-  }
-
-  if (design.length === 1) {
-    map.set(design[0], true);
-    map.set(design[1], true);
-    return map;
-  }
-
-  map = allSplits(design.slice(1), map);
-  map = allSplits(design.slice(0, 1), map);
-  map = allSplits(design.slice(-1), map);
-  map = allSplits(design.slice(0, -1), map);
-
-  return map;
-}
-
-// console.log(allSplits('bwuwbwuuuubgbwuugrurbwwbbrbbwuuurwrubuwgrurwrguwbgbbbburg', new Map()));
-
-/**
  * @param alphabet {string[]}
  * @param design {string}
  * @param map {Map<string, boolean>}
+ * @returns {boolean}
  */
 function isPossible(alphabet, design, map) {
   if (design.length === 0) return true;
@@ -48,8 +18,9 @@ function isPossible(alphabet, design, map) {
     map.set(design, false)
     return false;
   }
-  const anyPossible = matchedAlphabet.reduce((acc, matched) => {
-    const newDesign = design.slice(matched.length);
+
+  const anyPossible = matchedAlphabet.reduce((acc, current) => {
+    const newDesign = design.slice(current.length);
     return acc || isPossible(alphabet, newDesign, map);
   }, false);
 
