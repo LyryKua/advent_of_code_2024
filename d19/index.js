@@ -6,26 +6,26 @@ const NAME = `\n\n--- Day ${DAY}: Linen Layout ---`;
 /**
  * @param alphabet {string[]}
  * @param design {string}
- * @param map {Map<string, boolean>}
- * @returns {boolean}
+ * @param map {Map<string, number>}
+ * @returns {number}
  */
 function isPossible(alphabet, design, map) {
-  if (design.length === 0) return true;
+  if (design.length === 0) return 1;
   if (map.has(design)) return map.get(design);
 
   let matchedAlphabet = alphabet.filter(a => design.startsWith(a));
   if (matchedAlphabet.length === 0) {
-    map.set(design, false)
-    return false;
+    map.set(design, 0);
+    return 0;
   }
 
-  const anyPossible = matchedAlphabet.reduce((acc, current) => {
+  const timePossible = matchedAlphabet.reduce((acc, current) => {
     const newDesign = design.slice(current.length);
-    return acc || isPossible(alphabet, newDesign, map);
-  }, false);
+    return acc + isPossible(alphabet, newDesign, map);
+  }, 0);
 
-  map.set(design, anyPossible);
-  return anyPossible;
+  map.set(design, timePossible);
+  return timePossible;
 }
 
 /**
@@ -37,9 +37,23 @@ function part1(alphabet, designs) {
   let nbr = 0;
   let map = new Map();
   for (let design of designs) {
-    if (isPossible(alphabet, design, map)){
+    if (isPossible(alphabet, design, map)) {
       nbr += 1;
     }
+  }
+  return nbr;
+}
+
+/**
+ * @param alphabet {string[]}
+ * @param designs {string[]}
+ * @returns {number}
+ */
+function part2(alphabet, designs) {
+  let nbr = 0;
+  let map = new Map();
+  for (let design of designs) {
+    nbr += isPossible(alphabet, design, map);
   }
   return nbr;
 }
@@ -58,26 +72,11 @@ function main(input, part) {
     case 1:
       return part1(alphabet, designs);
     case 2:
-      return part;
+      return part2(alphabet, designs);
     default:
       throw new Error(`Only 2 parts. There is no part ${part}`);
   }
 }
-
-let example = `
-r, wr, b, g, bwu, rb, gb, br
-
-brwrr
-bggr
-gbbr
-rrbgbr
-ubwu
-bwurrg
-brgr
-bbrgwb
-`;
-let result = main(example, 1);
-console.log(result);
 
 console.log(NAME)
 getInput(DAY)
