@@ -159,3 +159,9 @@ npm run d17
 ```bash
 npm run d18
 ```
+
+### [--- Day 19: Linen Layout ---](https://adventofcode.com/2024/day/19)
+
+```bash
+npm run d19
+```
