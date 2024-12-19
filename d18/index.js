@@ -1,4 +1,4 @@
-import { addVectors, createMap, getInput, getNeighbors, isArrayInclude } from '../lib/index.js';
+import { addVectors, createMap, getInput, isArrayInclude } from '../lib/index.js';
 
 const DAY = 18;
 const NAME = `\n\n--- Day ${DAY}: RAM Run ---`;
@@ -8,27 +8,6 @@ const WIDTH = 71;
 const NBR_BYTES = 1024;
 const START = [0, 0];
 const END = [HEIGHT - 1, WIDTH - 1];
-
-/**
- * @param walls {number[][]}
- * @param paths {number[][]}
- */
-function printGrid(walls, paths) {
-  for (let i = 0; i < HEIGHT; i++) {
-    let line = [];
-    for (let j = 0; j < WIDTH; j++) {
-      if (isArrayInclude(walls, [i, j])) {
-        line.push('#');
-      } else if (isArrayInclude(paths, [i, j])) {
-        line.push('O');
-      } else {
-        line.push('.');
-      }
-    }
-    console.log(line.join(''));
-  }
-  console.log();
-}
 
 /**
  * @param map {Map<string, number[]>}
@@ -79,9 +58,31 @@ function part1(bytes) {
 }
 
 /**
+ * @param bytes {number[][]}
+ * @returns {string}
+ */
+function part2(bytes) {
+  let from = 0;
+  let to = bytes.length;
+  let lastByte = bytes[NBR_BYTES - 1];
+  while (from <= to) {
+    let middle = Math.floor((from + to) / 2);
+    let b = bytes.slice(0, middle)
+    let path = part1(b);
+    if (path.length === 1) {
+      to = middle - 1;
+      lastByte = bytes[middle - 1]
+    } else {
+      from = middle + 1;
+    }
+  }
+  return lastByte.reverse().join();
+}
+
+/**
  * @param input {string}
  * @param part {number}
- * @returns {number}
+ * @returns {number|string}
  */
 function main(input, part) {
   let bytes = input.trim().split('\n').map(m => m.split(',').map(Number).reverse());
@@ -89,45 +90,14 @@ function main(input, part) {
     case 1: {
       let b = bytes.slice(0, NBR_BYTES);
       let path = part1(b);
-      // printGrid(b, path);
       return path.length - 1;
     }
     case 2:
-      return part;
+      return part2(bytes);
     default:
       throw new Error(`Only 2 parts. There is no part ${part}`);
   }
 }
-
-let example = `
-5,4
-4,2
-4,5
-3,0
-2,1
-6,3
-2,4
-1,5
-0,6
-3,3
-2,6
-5,1
-1,2
-5,5
-2,5
-6,5
-1,4
-0,4
-6,4
-1,1
-6,1
-1,0
-0,5
-1,6
-2,0
-`;
-// let result = main(example, 1);
-// console.log(result);
 
 console.log(NAME);
 getInput(DAY)
