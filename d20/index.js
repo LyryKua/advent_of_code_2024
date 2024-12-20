@@ -5,7 +5,7 @@ import {
   getInput,
   isArrayInclude,
   isArraysEqual,
-  parseInputToMap, turn90DegreeLeft, turn90DegreeRight,
+  parseInputToMap,
 } from '../lib/index.js';
 
 const DAY = 20;
@@ -36,15 +36,18 @@ function findShortCut(path) {
   let allShortCuts = new Map();
   for (let i = 0; i < path.length - 1; i++) {
     let n = [
-      addVectors(path[i], [0, 2]),
-      addVectors(path[i], [2, 0]),
-      addVectors(path[i], [0, -2]),
-      addVectors(path[i], [-2, 0]),
+      [addVectors(path[i], [0, 1]), addVectors(path[i], [0, 2])],
+      [addVectors(path[i], [1, 0]), addVectors(path[i], [2, 0])],
+      [addVectors(path[i], [0, -1]), addVectors(path[i], [0, -2])],
+      [addVectors(path[i], [-1, 0]), addVectors(path[i], [-2, 0])],
     ];
     for (let j = 0; j < n.length; j++) {
-      let index = path.findIndex(p => isArraysEqual(p, n[j]));
+      if (isArrayInclude(path, n[j][0])) {
+        continue
+      }
+      let index = path.findIndex(p => isArraysEqual(p, n[j][1]));
       if (index > i) {
-        allShortCuts.set(n[j].join(), index - i - 1);
+        allShortCuts.set(path[i].join() + '-' + n[j][1].join(), index - i - 2);
       }
     }
   }
@@ -115,16 +118,13 @@ function main(input, part) {
   let [end] = findChar(maze, 'E');
   switch (part) {
     case 1: {
+      let part1Answer = 0
       let path = part1(maze, start, end);
-      // printMaze(maze, path);
       let tmp = findShortCut(path);
-      for (let [key, val] of tmp) {
-        if (val - 1 === 0) {
-          continue;
-        }
-        console.log(key, val - 1)
+      for (let [_, val] of tmp) {
+        part1Answer += val >= 100 ? 1 : 0
       }
-      return path.length;
+      return part1Answer;
     }
     case 2:
       return part;
@@ -133,15 +133,15 @@ function main(input, part) {
   }
 }
 
-// let example = `
-// ######
-// #....#
-// #..#.#
-// #..#.#
-// #.##.#
-// #S##E#
-// ######
-// `;
+let example1 = `
+######
+#....#
+#..#.#
+#..#.#
+#.##.#
+#S##E#
+######
+`;
 let example = `
 ###############
 #...#...#.....#
@@ -162,12 +162,12 @@ let example = `
 let result = main(example, 1);
 console.log(result);
 
-// console.log(NAME);
-// getInput(DAY)
-//   .then(input => {
-//     const part1Result = main(input, 1);
-//     console.log('p1:', part1Result);
-//
-//     const part2Result = main(input, 2);
-//     console.log('p2:', part2Result);
-//   });
+console.log(NAME);
+getInput(DAY)
+  .then(input => {
+    const part1Result = main(input, 1);
+    console.log('p1:', part1Result);
+
+    const part2Result = main(input, 2);
+    console.log('p2:', part2Result);
+  });
