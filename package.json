@@ -32,7 +32,8 @@
     "d16": "node d16/index.js",
     "d17": "node d17/index.js",
     "d18": "node d18/index.js",
-    "d19": "node d19/index.js"
+    "d19": "node d19/index.js",
+    "d20": "node d20/index.js"
   },
   "type": "module",
   "dependencies": {
